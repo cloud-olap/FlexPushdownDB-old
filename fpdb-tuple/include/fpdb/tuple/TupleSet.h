@@ -100,8 +100,6 @@ public:
    */
   tl::expected<void, std::string> renameColumns(const std::vector<std::string>& columnNames);
   tl::expected<void, std::string> renameColumns(const std::unordered_map<std::string, std::string> &columnRenames);
-  tl::expected<std::shared_ptr<TupleSet>, std::string>
-          renameColumnsWithNewTupleSet(const std::vector<std::string>& columnNames);
 
   /**
    * Invokes combineChunks on the underlying table

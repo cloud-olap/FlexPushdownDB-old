@@ -53,19 +53,6 @@ public:
                                       size_t cacheSize = 1L * 1024 * 1024 * 1024);
 
   /**
-   * Test with single thread execution
-   */
-  static bool e2eNoStartCalciteServerSingleThread(const string &schemaName,
-                                                  const vector<string> &queryFileNames,
-                                                  int parallelDegree,
-                                                  bool isDistributed,
-                                                  ObjStoreType objStoreType,
-                                                  const shared_ptr<Mode> &mode = Mode::pullupMode(),
-                                                  CachingPolicyType cachingPolicyType = CachingPolicyType::NONE,
-                                                  size_t cacheSize = 1L * 1024 * 1024 * 1024,
-                                                  bool useHeuristicJoinOrdering = true);
-
-  /**
    * Temp test for disabling heuristic join ordering by calcite
    */
   static bool e2eNoStartCalciteServerNoHeuristicJoinOrdering(
@@ -89,15 +76,16 @@ public:
            int parallelDegree,
            bool isDistributed,
            ObjStoreType objStoreType,
-           const shared_ptr<Mode> &mode,
+           const shared_ptr<Mode> &mode = Mode::pullupMode(),
            CachingPolicyType cachingPolicyType = CachingPolicyType::NONE,
            size_t cacheSize = 1L * 1024 * 1024 * 1024);
 
   double getCrtQueryHitRatio() const;
-  void setUseThreads(bool useThreads);
   void setUseHeuristicJoinOrdering(bool useHeuristicJoinOrdering);
   void setFixLayoutIndices(const set<int> &fixLayoutIndices);
   void setCollAdaptPushdownMetrics(bool collAdaptPushdownMetrics);
+  void setConcurrent(bool concurrent);
+  void setShowResults(bool showResults);
 
   void runTest();
 
@@ -109,7 +97,7 @@ private:
   void makeCalciteClient();
   void connect();
   void makeExecutor();
-  void executeQueryFile(const string &queryFileName);
+  void executeQueryFile(long queryId, const string &queryFileName);
   void stop();
 
   static std::shared_ptr<fpdb::store::server::Server> fpdbStoreServer_;
@@ -136,9 +124,7 @@ private:
   shared_ptr<::caf::actor_system> actorSystem_;
   vector<::caf::node_id> nodes_;
   shared_ptr<Executor> executor_;
-
-  // whether allowed using multiple threads, default to true
-  bool useThreads_ = true;
+  shared_ptr<std::atomic<long>> queryCounter_;
 
   // whether to use heuristic join ordering by calcite, true by default
   bool useHeuristicJoinOrdering_ = true;
@@ -151,6 +137,12 @@ private:
 
   // used to collect adaptive pushdown metrics
   bool collAdaptPushdownMetrics_ = false;
+
+  // whether to run queries concurrently
+  bool concurrent_ = false;
+
+  // whether to show query results
+  bool showResults_ = false;
 };
 
 }

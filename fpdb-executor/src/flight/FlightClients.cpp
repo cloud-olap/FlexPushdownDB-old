@@ -2,7 +2,6 @@
 // Created by Yifei Yang on 11/17/22.
 //
 
-#include <mutex>
 #include <fpdb/executor/flight/FlightClients.h>
 
 namespace fpdb::executor::flight {

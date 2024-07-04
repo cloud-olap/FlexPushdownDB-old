@@ -59,16 +59,21 @@ add_library(fpdb-store-server-flight-api STATIC
         include/fpdb/store/server/flight/BitmapType.h
         src/flight/PutBitmapCmd.cpp include/fpdb/store/server/flight/PutBitmapCmd.hpp
         src/flight/ClearBitmapCmd.cpp include/fpdb/store/server/flight/ClearBitmapCmd.hpp
-        src/flight/PutAdaptPushdownMetricsCmd.cpp include/fpdb/store/server/flight/PutAdaptPushdownMetricsCmd.hpp
-        src/flight/ClearAdaptPushdownMetricsCmd.cpp include/fpdb/store/server/flight/ClearAdaptPushdownMetricsCmd.hpp
-        src/flight/SetAdaptPushdownCmd.cpp include/fpdb/store/server/flight/SetAdaptPushdownCmd.hpp
+        src/flight/ClearTableCmd.cpp include/fpdb/store/server/flight/ClearTableCmd.hpp
         src/flight/TicketType.cpp include/fpdb/store/server/flight/TicketType.hpp
         src/flight/TicketObject.cpp include/fpdb/store/server/flight/TicketObject.hpp
         src/flight/GetObjectTicket.cpp include/fpdb/store/server/flight/GetObjectTicket.hpp
         src/flight/SelectObjectContentTicket.cpp include/fpdb/store/server/flight/SelectObjectContentTicket.hpp
         src/flight/GetBitmapTicket.cpp include/fpdb/store/server/flight/GetBitmapTicket.hpp
         src/flight/GetTableTicket.cpp include/fpdb/store/server/flight/GetTableTicket.hpp
-        src/flight/GetBatchLoadInfoTicket.cpp include/fpdb/store/server/flight/GetBatchLoadInfoTicket.hpp)
+        src/flight/GetBatchLoadInfoTicket.cpp include/fpdb/store/server/flight/GetBatchLoadInfoTicket.hpp
+        src/flight/adaptive/PutAdaptPushdownMetricsCmd.cpp include/fpdb/store/server/flight/adaptive/PutAdaptPushdownMetricsCmd.hpp
+        src/flight/adaptive/ClearAdaptPushdownMetricsCmd.cpp include/fpdb/store/server/flight/adaptive/ClearAdaptPushdownMetricsCmd.hpp
+        src/flight/adaptive/SetAdaptPushdownCmd.cpp include/fpdb/store/server/flight/adaptive/SetAdaptPushdownCmd.hpp
+        src/flight/adaptive/PushbackCompleteCmd.cpp include/fpdb/store/server/flight/adaptive/PushbackCompleteCmd.hpp
+        src/flight/adaptive/PushbackDoubleExecCmd.cpp include/fpdb/store/server/flight/adaptive/PushbackDoubleExecCmd.hpp
+        src/flight/adaptive/SetNumReqToTailCmd.cpp include/fpdb/store/server/flight/adaptive/SetNumReqToTailCmd.hpp
+        include/fpdb/store/server/flight/adaptive/ReqExtraInfo.hpp)
 
 target_include_directories(fpdb-store-server-flight-api PUBLIC include)
 
@@ -95,7 +100,12 @@ add_library(fpdb-store-server-objlib OBJECT
         src/flight/HeaderMiddlewareFactory.cpp include/fpdb/store/server/flight/HeaderMiddlewareFactory.hpp
         src/flight/BitmapCache.cpp include/fpdb/store/server/flight/BitmapCache.hpp
         src/flight/BloomFilterCache.cpp include/fpdb/store/server/flight/BloomFilterCache.hpp
-        src/flight/AdaptPushdownManager.cpp include/fpdb/store/server/flight/AdaptPushdownManager.hpp)
+        include/fpdb/store/server/flight/adaptive/AdaptPushdownManagerVersion.hpp
+        src/flight/adaptive/AdaptPushdownManager.cpp include/fpdb/store/server/flight/adaptive/AdaptPushdownManager.hpp
+        src/flight/adaptive/AdaptPushdownManager2.cpp include/fpdb/store/server/flight/adaptive/AdaptPushdownManager2.hpp
+        src/flight/adaptive/AdaptPushdownManager2Pa.cpp include/fpdb/store/server/flight/adaptive/AdaptPushdownManager2Pa.hpp
+        src/flight/adaptive/AdaptPushdownManager3.cpp include/fpdb/store/server/flight/adaptive/AdaptPushdownManager3.hpp
+        src/flight/adaptive/AdaptPushdownManager3Pa.cpp include/fpdb/store/server/flight/adaptive/AdaptPushdownManager3Pa.hpp)
 
 set_target_properties(fpdb-store-server-objlib PROPERTIES POSITION_INDEPENDENT_CODE ON)
 set_target_properties(fpdb-store-server-objlib PROPERTIES OUTPUT_NAME fpdb-store-server)

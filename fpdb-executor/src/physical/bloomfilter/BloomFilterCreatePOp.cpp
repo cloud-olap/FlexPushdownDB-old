@@ -2,7 +2,6 @@
 // Created by Yifei Yang on 3/16/22.
 //
 
-#include <optional>
 #include <fpdb/executor/physical/bloomfilter/BloomFilterCreatePOp.h>
 #include <fpdb/executor/physical/bloomfilter/BloomFilterCreateKernel.h>
 #include <fpdb/executor/physical/bloomfilter/BloomFilterCreateArrowKernel.h>
@@ -95,11 +94,6 @@ void BloomFilterCreatePOp::onStart() {
 void BloomFilterCreatePOp::onTupleSet(const TupleSetMessage &msg) {
   // add tupleSet to kernel
   auto tupleSet = msg.tuples();
-
-#if SHOW_DEBUG_METRICS == true
-  numRowsInput_ += tupleSet->numRows();
-#endif
-
   auto result = kernel_->bufferTupleSet(tupleSet);
   if (!result.has_value()) {
     ctx()->notifyError(result.error());
@@ -203,11 +197,5 @@ void BloomFilterCreatePOp::notifyFPDBStoreBloomFilterUsers() {
 void BloomFilterCreatePOp::clear() {
   kernel_->clear();
 }
-
-#if SHOW_DEBUG_METRICS == true
-int64_t BloomFilterCreatePOp::getNumRowsInput() const {
-  return numRowsInput_;
-}
-#endif
 
 }

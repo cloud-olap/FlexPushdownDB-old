@@ -1,5 +1,5 @@
 # AWS SDK
-set(AWS_CPP_SDK_VERSION "1.11.265")   # Original 1.8.133
+set(AWS_CPP_SDK_VERSION "1.8.133")
 set(AWS_CPP_SDK_GIT_URL "https://github.com/aws/aws-sdk-cpp.git")
 
 
@@ -40,7 +40,6 @@ ExternalProject_Add(${AWSCPPSDK_BASE}
         -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
         -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
         -DCMAKE_INSTALL_PREFIX=${AWSCPPSDK_INSTALL_DIR}
-        -DAWS_SDK_WARNINGS_ARE_ERRORS=OFF
         )
 
 

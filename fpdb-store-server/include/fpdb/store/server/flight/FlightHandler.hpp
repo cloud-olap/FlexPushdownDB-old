@@ -5,7 +5,6 @@
 #ifndef FPDB_FPDB_STORE_SERVER_INCLUDE_FPDB_STORE_SERVER_FLIGHT_FLIGHTHANDLER_HPP
 #define FPDB_FPDB_STORE_SERVER_INCLUDE_FPDB_STORE_SERVER_FLIGHT_FLIGHTHANDLER_HPP
 
-#include <optional>
 #include <arrow/api.h>
 #include <arrow/flight/api.h>
 #include <tl/expected.hpp>
@@ -15,9 +14,16 @@
 #include "fpdb/store/server/flight/SelectObjectContentCmd.hpp"
 #include "fpdb/store/server/flight/PutBitmapCmd.hpp"
 #include "fpdb/store/server/flight/ClearBitmapCmd.hpp"
-#include "fpdb/store/server/flight/PutAdaptPushdownMetricsCmd.hpp"
-#include "fpdb/store/server/flight/ClearAdaptPushdownMetricsCmd.hpp"
-#include "fpdb/store/server/flight/SetAdaptPushdownCmd.hpp"
+#include "fpdb/store/server/flight/ClearTableCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/PutAdaptPushdownMetricsCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/ClearAdaptPushdownMetricsCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/SetAdaptPushdownCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/PushbackCompleteCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/SetNumReqToTailCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/AdaptPushdownManager.hpp"
+#include "fpdb/store/server/flight/adaptive/AdaptPushdownManager2.hpp"
+#include "fpdb/store/server/flight/adaptive/AdaptPushdownManager3Pa.hpp"
+#include "fpdb/store/server/flight/adaptive/ReqExtraInfo.hpp"
 #include "fpdb/store/server/flight/GetObjectTicket.hpp"
 #include "fpdb/store/server/flight/SelectObjectContentTicket.hpp"
 #include "fpdb/store/server/flight/GetBitmapTicket.hpp"
@@ -27,10 +33,9 @@
 #include "fpdb/store/server/flight/BitmapType.h"
 #include "fpdb/store/server/flight/BitmapCache.hpp"
 #include "fpdb/store/server/flight/BloomFilterCache.hpp"
-#include "fpdb/store/server/flight/AdaptPushdownManager.hpp"
 #include "fpdb/store/server/flight/Util.hpp"
 #include "fpdb/store/server/caf/ActorManager.hpp"
-#include "fpdb/executor/cache/TableCache.h"
+#include "fpdb/executor/flight/TableCache.h"
 #include "fpdb/executor/physical/PhysicalPlan.h"
 
 using namespace ::arrow::flight;
@@ -219,7 +224,8 @@ private:
           long query_id,
           const std::string &fpdb_store_super_pop,
           const std::string &query_plan_string,
-          int parallel_degree);
+          int parallel_degree,
+          const ReqExtraInfo &extra_info);
 
   /**
    *
@@ -306,6 +312,15 @@ private:
   /**
    *
    * @param context
+   * @param clear_table_cmd
+   * @return
+   */
+  tl::expected<void, ::arrow::Status> do_put_clear_table(const ServerCallContext& context,
+                                                         const std::shared_ptr<ClearTableCmd>& clear_table_cmd);
+
+  /**
+   *
+   * @param context
    * @param put_adapt_pushdown_metrics_cmd
    * @return
    */
@@ -332,6 +347,26 @@ private:
   tl::expected<void, ::arrow::Status> do_put_set_adapt_pushdown(
           const ServerCallContext& context,
           const std::shared_ptr<SetAdaptPushdownCmd>& set_adapt_pushdown_cmd);
+
+  /**
+   *
+   * @param context
+   * @param pushback_complete_cmd
+   * @return
+   */
+  tl::expected<void, ::arrow::Status> do_put_pushback_complete(
+          const ServerCallContext& context,
+          const std::shared_ptr<PushbackCompleteCmd>& pushback_complete_cmd);
+
+  /**
+   *
+   * @param context
+   * @param set_num_req_to_tail_cmd
+   * @return
+   */
+  tl::expected<void, ::arrow::Status> do_put_set_num_req_to_tail(
+          const ServerCallContext& context,
+          const std::shared_ptr<SetNumReqToTailCmd> set_num_req_to_tail_cmd);
 
   /**
    *
@@ -375,6 +410,11 @@ private:
   void init_bitmap_cache();
 
   /**
+   * init adapt_pushdown_manager in case it's a ptr
+   */
+  void init_adapt_pushdown_manager();
+
+  /**
    * Get root path of the corresponding drive
    */
   std::string getStoreRootPath(int driveId);
@@ -399,7 +439,7 @@ private:
   BloomFilterCache bloom_filter_cache_;
 
   // table cache (e.x. for shuffle result)
-  executor::cache::TableCache table_cache_;
+  executor::flight::TableCache table_cache_;
 
   // mutex and cv for bitmap caches
   std::unordered_map<BitmapType, std::shared_ptr<std::mutex>> bitmap_mutex_map_;
@@ -412,6 +452,8 @@ private:
 
   // adaptive pushdown
   AdaptPushdownManager adapt_pushdown_manager_;
+  AdaptPushdownManager2 adapt_pushdown_manager2_;
+  std::shared_ptr<AdaptPushdownManager3> adapt_pushdown_manager3_;
   ::caf::actor_system_config adapt_pushdown_actor_system_cfg_;
   // FIXME: unsure why if just using one actor_system and replace by a new one when modifying actor_system_config,
   //  it may stuck (probably in its destructor), so here a work-around is to store all newly created actor_system

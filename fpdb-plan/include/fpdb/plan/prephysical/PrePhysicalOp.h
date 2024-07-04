@@ -18,7 +18,7 @@ namespace fpdb::plan::prephysical {
 
 class PrePhysicalOp {
 public:
-  PrePhysicalOp(uint id, PrePOpType type, double rowCount);
+  PrePhysicalOp(uint id, PrePOpType type);
   virtual ~PrePhysicalOp() = default;
 
   uint getId() const;
@@ -27,16 +27,13 @@ public:
   const vector<shared_ptr<PrePhysicalOp>> &getProducers() const;
   const set<string> &getProjectColumnNames() const;
   virtual set<string> getUsedColumnNames() = 0;
-  double getRowCount() const;
 
   void setProducers(const vector<shared_ptr<PrePhysicalOp>> &producers);
   virtual void setProjectColumnNames(const set<string> &projectColumnNames);
-  void setRowCount(double rowCount);
 
 private:
   uint id_;
   PrePOpType type_;
-  double rowCount_;   // estimated row count
   vector<shared_ptr<PrePhysicalOp>> producers_;
   set<string> projectColumnNames_;
 };

@@ -5,7 +5,6 @@
 #ifndef FPDB_FPDB_PLAN_INCLUDE_FPDB_PLAN_CALCITEPLANJSONDESERIALIZER_H
 #define FPDB_FPDB_PLAN_INCLUDE_FPDB_PLAN_CALCITEPLANJSONDESERIALIZER_H
 
-#include <optional>
 #include <fpdb/plan/prephysical/PrePhysicalPlan.h>
 #include <fpdb/plan/prephysical/PrePhysicalOp.h>
 #include <fpdb/plan/prephysical/SortPrePOp.h>
@@ -45,9 +44,6 @@ private:
 
   shared_ptr<PrePhysicalOp> deserializeDfs(json &jObj);
   vector<shared_ptr<PrePhysicalOp>> deserializeProducers(const json &jObj);
-
-  // serialize common fields: <row count>
-  std::tuple<double> deserializeCommon(const json &jObj);
 
   shared_ptr<fpdb::expression::gandiva::Expression> deserializeInputRef(const json &jObj);
   shared_ptr<fpdb::expression::gandiva::Expression> deserializeLiteral(const json &jObj);

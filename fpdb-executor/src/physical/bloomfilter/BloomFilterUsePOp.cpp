@@ -71,11 +71,6 @@ void BloomFilterUsePOp::onStart() {
 void BloomFilterUsePOp::onTupleSet(const TupleSetMessage &msg) {
   // Buffer tupleSet
   auto tupleSet = msg.tuples();
-
-#if SHOW_DEBUG_METRICS == true
-  numRowsInput_ += tupleSet->numRows();
-#endif
-
   if (!receivedTupleSet_.has_value()) {
     receivedTupleSet_ = tupleSet;
   }
@@ -129,10 +124,9 @@ tl::expected<void, std::string> BloomFilterUsePOp::filterAndSend() {
   if (!expFilteredTupleSet.has_value()) {
     return tl::make_unexpected(expFilteredTupleSet.error());
   }
-  auto filteredTupleSet = *expFilteredTupleSet;
 
   // Send
-  std::shared_ptr<Message> tupleSetMessage = std::make_shared<TupleSetMessage>(filteredTupleSet, name());
+  std::shared_ptr<Message> tupleSetMessage = std::make_shared<TupleSetMessage>(*expFilteredTupleSet, name());
   ctx()->tell(tupleSetMessage);
 
   // Clear buffer
@@ -145,11 +139,5 @@ void BloomFilterUsePOp::clear() {
   receivedTupleSet_.reset();
   bloomFilter_.reset();
 }
-
-#if SHOW_DEBUG_METRICS == true
-int64_t BloomFilterUsePOp::getNumRowsInput() const {
-  return numRowsInput_;
-}
-#endif
 
 }

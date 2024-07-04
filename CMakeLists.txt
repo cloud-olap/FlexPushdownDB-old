@@ -10,7 +10,7 @@ include(CMakeUtils)
 
 setDefaults()
 
-set(FPDB_LLVM_VERSIONS "14.0" "13.0" "12.0" "11.1" "11.0" "10" CACHE STRING "")
+set(FPDB_LLVM_VERSIONS "13.0" "12.0" "11.1" "11.0" "10" CACHE STRING "")
 include(Configure_LLVM)
 
 

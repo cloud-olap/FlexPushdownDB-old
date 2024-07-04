@@ -124,17 +124,6 @@ bool fpdb::util::getBit(const vector<int64_t> &bitmap, int64_t n) {
   return (bitmap[n / 64] >> (n % 64)) & 1UL;
 }
 
-std::vector<std::string> fpdb::util::split(const std::string &str, const std::string &delimiter) {
-  std::vector<std::string> res;
-  size_t last = 0, next = 0;
-  while ((next = str.find(delimiter, last)) != std::string::npos) {
-    res.emplace_back(str.substr(last, next-last));
-    last = next + delimiter.size();
-  }
-  res.emplace_back(str.substr(last));
-  return res;
-}
-
 bool fpdb::util::isInteger(const string& str) {
   return !str.empty() && std::find_if(str.begin(), str.end(),
                                       [](unsigned char c) { return !std::isdigit(c); }) == str.end();
@@ -156,4 +145,13 @@ tl::expected<string, string> fpdb::util::execCmd(const char *cmd) {
 
 tl::expected<string, string> fpdb::util::getLocalIp() {
   return execCmd("curl -s ifconfig.me");
+}
+
+tl::expected<string, string> fpdb::util::getLocalPrivateIp() {
+  auto expIp = execCmd("hostname -I");
+  if (!expIp.has_value()) {
+    return expIp;
+  }
+  auto ip = *expIp;
+  return ip.substr(0, ip.size() - 2);
 }

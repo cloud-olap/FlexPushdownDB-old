@@ -2,7 +2,6 @@
 // Created by Yifei Yang on 11/21/21.
 //
 
-#include <optional>
 #include <fpdb/executor/physical/prune/PartitionPruner.h>
 #include <fpdb/expression/gandiva/Canonicalizer.h>
 #include <fpdb/expression/gandiva/And.h>

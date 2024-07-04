@@ -1,0 +1,329 @@
+{
+  "schemaName": "tpch-sf50-small-part/csv/",
+  "tables": [
+    {
+      "name": "nation",
+      "format": {
+        "name": "csv",
+        "fieldDelimiter": "|"
+      },
+      "numPartitions": 1,
+      "fields": [
+        {
+          "name": "n_nationkey",
+          "type": "int64"
+        },
+        {
+          "name": "n_name",
+          "type": "string"
+        },
+        {
+          "name": "n_regionkey",
+          "type": "int64"
+        },
+        {
+          "name": "n_comment",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "region",
+      "format": {
+        "name": "csv",
+        "fieldDelimiter": "|"
+      },
+      "numPartitions": 1,
+      "fields": [
+        {
+          "name": "r_regionkey",
+          "type": "int64"
+        },
+        {
+          "name": "r_name",
+          "type": "string"
+        },
+        {
+          "name": "r_comment",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "part",
+      "format": {
+        "name": "csv",
+        "fieldDelimiter": "|"
+      },
+      "numPartitions": 20,
+      "fields": [
+        {
+          "name": "p_partkey",
+          "type": "int64"
+        },
+        {
+          "name": "p_name",
+          "type": "string"
+        },
+        {
+          "name": "p_mfgr",
+          "type": "string"
+        },
+        {
+          "name": "p_brand",
+          "type": "string"
+        },
+        {
+          "name": "p_type",
+          "type": "string"
+        },
+        {
+          "name": "p_size",
+          "type": "int64"
+        },
+        {
+          "name": "p_container",
+          "type": "string"
+        },
+        {
+          "name": "p_retailprice",
+          "type": "double"
+        },
+        {
+          "name": "p_comment",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "supplier",
+      "format": {
+        "name": "csv",
+        "fieldDelimiter": "|"
+      },
+      "numPartitions": 2,
+      "fields": [
+        {
+          "name": "s_suppkey",
+          "type": "int64"
+        },
+        {
+          "name": "s_name",
+          "type": "string"
+        },
+        {
+          "name": "s_address",
+          "type": "string"
+        },
+        {
+          "name": "s_nationkey",
+          "type": "int64"
+        },
+        {
+          "name": "s_phone",
+          "type": "string"
+        },
+        {
+          "name": "s_acctbal",
+          "type": "double"
+        },
+        {
+          "name": "s_comment",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "partsupp",
+      "format": {
+        "name": "csv",
+        "fieldDelimiter": "|"
+      },
+      "numPartitions": 150,
+      "fields": [
+        {
+          "name": "ps_partkey",
+          "type": "int64"
+        },
+        {
+          "name": "ps_suppkey",
+          "type": "int64"
+        },
+        {
+          "name": "ps_availqty",
+          "type": "int64"
+        },
+        {
+          "name": "ps_supplycost",
+          "type": "double"
+        },
+        {
+          "name": "ps_comment",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "customer",
+      "format": {
+        "name": "csv",
+        "fieldDelimiter": "|"
+      },
+      "numPartitions": 30,
+      "fields": [
+        {
+          "name": "c_custkey",
+          "type": "int64"
+        },
+        {
+          "name": "c_name",
+          "type": "string"
+        },
+        {
+          "name": "c_address",
+          "type": "string"
+        },
+        {
+          "name": "c_nationkey",
+          "type": "int64"
+        },
+        {
+          "name": "c_phone",
+          "type": "string"
+        },
+        {
+          "name": "c_acctbal",
+          "type": "double"
+        },
+        {
+          "name": "c_mktsegment",
+          "type": "string"
+        },
+        {
+          "name": "c_comment",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "format": {
+        "name": "csv",
+        "fieldDelimiter": "|"
+      },
+      "numPartitions": 200,
+      "fields": [
+        {
+          "name": "o_orderkey",
+          "type": "int64"
+        },
+        {
+          "name": "o_custkey",
+          "type": "int64"
+        },
+        {
+          "name": "o_orderstatus",
+          "type": "string"
+        },
+        {
+          "name": "o_totalprice",
+          "type": "double"
+        },
+        {
+          "name": "o_orderdate",
+          "type": "date"
+        },
+        {
+          "name": "o_orderpriority",
+          "type": "string"
+        },
+        {
+          "name": "o_clerk",
+          "type": "string"
+        },
+        {
+          "name": "o_shippriority",
+          "type": "int64"
+        },
+        {
+          "name": "o_comment",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "lineitem",
+      "format": {
+        "name": "csv",
+        "fieldDelimiter": "|"
+      },
+      "numPartitions": 500,
+      "fields": [
+        {
+          "name": "l_orderkey",
+          "type": "int64"
+        },
+        {
+          "name": "l_partkey",
+          "type": "int64"
+        },
+        {
+          "name": "l_suppkey",
+          "type": "int64"
+        },
+        {
+          "name": "l_linenumber",
+          "type": "int64"
+        },
+        {
+          "name": "l_quantity",
+          "type": "double"
+        },
+        {
+          "name": "l_extendedprice",
+          "type": "double"
+        },
+        {
+          "name": "l_discount",
+          "type": "double"
+        },
+        {
+          "name": "l_tax",
+          "type": "double"
+        },
+        {
+          "name": "l_returnflag",
+          "type": "string"
+        },
+        {
+          "name": "l_linestatus",
+          "type": "string"
+        },
+        {
+          "name": "l_shipdate",
+          "type": "date"
+        },
+        {
+          "name": "l_commitdate",
+          "type": "date"
+        },
+        {
+          "name": "l_receiptdate",
+          "type": "date"
+        },
+        {
+          "name": "l_shipinstruct",
+          "type": "string"
+        },
+        {
+          "name": "l_shipmode",
+          "type": "string"
+        },
+        {
+          "name": "l_comment",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

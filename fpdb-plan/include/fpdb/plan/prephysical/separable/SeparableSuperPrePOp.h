@@ -15,7 +15,7 @@ namespace fpdb::plan::prephysical::separable {
 class SeparableSuperPrePOp: public PrePhysicalOp {
 
 public:
-  SeparableSuperPrePOp(uint id, double rowCount, const std::shared_ptr<PrePhysicalOp> &rootOp);
+  SeparableSuperPrePOp(uint id, const std::shared_ptr<PrePhysicalOp> &rootOp);
 
   const std::shared_ptr<PrePhysicalOp> &getRootOp() const;
 

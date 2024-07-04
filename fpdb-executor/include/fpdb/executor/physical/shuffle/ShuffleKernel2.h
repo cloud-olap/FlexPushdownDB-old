@@ -28,13 +28,15 @@ struct PartitionRowIdInfo {
 };
 
 class ShuffleKernel2 {
-
 public:
   static tl::expected<std::vector<std::shared_ptr<TupleSet>>, std::string>
   shuffle(const std::vector<std::string> &columnNames,
           size_t numSlots,
           const std::shared_ptr<TupleSet> &tupleSet);
 
+private:
+  static void clear(size_t numSlot, uint32_t* hashes,
+                    PartitionRowIdInfo* partitionRowIdInfos, int64_t* mergedIndices);
 };
 
 }

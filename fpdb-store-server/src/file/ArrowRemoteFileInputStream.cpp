@@ -30,7 +30,7 @@ std::shared_ptr<ArrowRemoteFileInputStream> ArrowRemoteFileInputStream::make(con
 }
 
 ::arrow::Result<int64_t> ArrowRemoteFileInputStream::Read(int64_t nbytes, void* out) {
-  auto result = read(nbytes, static_cast<char*>(out));
+  auto result = read(nbytes, static_cast<uint8_t*>(out));
   if (result.has_value()) {
     position_ += *result;
     return ::arrow::Result<int64_t>(*result);
@@ -40,18 +40,20 @@ std::shared_ptr<ArrowRemoteFileInputStream> ArrowRemoteFileInputStream::make(con
 }
 
 ::arrow::Result<std::shared_ptr<::arrow::Buffer>> ArrowRemoteFileInputStream::Read(int64_t nbytes) {
-  char* out = (char*) malloc(nbytes);
-  auto result = read(nbytes, out);
+  auto expBuffer = arrow::AllocateBuffer(nbytes, arrow::default_memory_pool());
+  if (!expBuffer.ok()) {
+    return expBuffer;
+  }
+  auto result = read(nbytes, (*expBuffer)->mutable_data());
   if (result.has_value()) {
     position_ += *result;
-    auto buffer = ::arrow::Buffer::Wrap(out, *result);
-    return ::arrow::Result<std::shared_ptr<::arrow::Buffer>>(buffer);
+    return expBuffer;
   } else {
     return ::arrow::Status::IOError(result.error());
   }
 }
 
-tl::expected<int64_t, std::string> ArrowRemoteFileInputStream::read(int64_t nbytes, char* out) {
+tl::expected<int64_t, std::string> ArrowRemoteFileInputStream::read(int64_t nbytes, uint8_t* out) {
   std::vector<std::string> chunksRead;
   std::vector<int64_t> sizesRead;
 

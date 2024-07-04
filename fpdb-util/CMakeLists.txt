@@ -4,6 +4,7 @@
 
 add_library(fpdb-util
         include/fpdb/util/Traits.h
+        include/fpdb/util/Color.h
         src/Util.cpp include/fpdb/util/Util.h
         src/CPUMonitor.cpp include/fpdb/util/CPUMonitor.h)
 

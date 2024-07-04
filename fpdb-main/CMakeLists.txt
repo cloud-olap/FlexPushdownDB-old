@@ -44,7 +44,6 @@ add_executable(fpdb-main-test
         test-base/TestUtil.cpp test-base/TestUtil.h
         test-base/BitmapPushdownTestUtil.cpp test-base/BitmapPushdownTestUtil.h
         test-base/AdaptPushdownTestUtil.cpp test-base/AdaptPushdownTestUtil.h
-        test-base/PredTransTestUtil.cpp test-base/PredTransTestUtil.h
         test/SSBTest.cpp
         test/SSBFPDBStoreSameNodeTest.cpp
         test/TPCHTest.cpp
@@ -52,8 +51,7 @@ add_executable(fpdb-main-test
         test/TPCHFPDBStoreSameNodeTest.cpp
         test/CachingOnlyTest.cpp
         test/HybridTest.cpp
-        test/BitmapPushdownTest.cpp
-        test/PredTransTest.cpp)
+        test/BitmapPushdownTest.cpp)
 
 target_include_directories(fpdb-main-test PRIVATE test-base)
 
@@ -80,15 +78,13 @@ add_executable(fpdb-main-bench
         test-base/TestUtil.cpp test-base/TestUtil.h
         test-base/BitmapPushdownTestUtil.cpp test-base/BitmapPushdownTestUtil.h
         test-base/AdaptPushdownTestUtil.cpp test-base/AdaptPushdownTestUtil.h
-        test-base/PredTransTestUtil.cpp test-base/PredTransTestUtil.h
         bench/SSBDistFPDBStoreBench.cpp
         bench/TPCHBench.cpp
         bench/TPCHDistBench.cpp
         bench/TPCHFPDBStoreDiffNodeBench.cpp
         bench/TPCHDistFPDBStoreBench.cpp
         bench/BytesReadBench.cpp
-        bench/BitmapPushdownBench.cpp
-        bench/PredTransBench.cpp)
+        bench/BitmapPushdownBench.cpp)
 
 target_include_directories(fpdb-main-bench PRIVATE test-base)
 
@@ -97,3 +93,18 @@ target_link_libraries(fpdb-main-bench PRIVATE fpdb-store-server-static)
 target_link_libraries(fpdb-main-bench PRIVATE doctest::doctest)
 
 add_dependencies(fpdb-main-bench resources)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Hybrid Parquet Tests
+#-----------------------------------------------------------------------------------------------------------------------
+
+add_executable(hybrid_parquet_tests
+        test-base/TestUtil.cpp test-base/TestUtil.h
+        HybridParquetTests.cpp)
+
+target_include_directories(hybrid_parquet_tests PRIVATE test-base)
+
+target_link_libraries(hybrid_parquet_tests PRIVATE fpdb-main)
+target_link_libraries(hybrid_parquet_tests PRIVATE fpdb-store-server-static)
+
+add_dependencies(hybrid_parquet_tests resources)

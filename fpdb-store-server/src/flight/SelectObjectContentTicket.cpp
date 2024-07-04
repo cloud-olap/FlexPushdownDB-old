@@ -11,19 +11,22 @@ namespace fpdb::store::server::flight {
 SelectObjectContentTicket::SelectObjectContentTicket(long query_id,
                                                      const std::string &fpdb_store_super_pop,
                                                      const std::string &query_plan_string,
-                                                     int parallel_degree):
+                                                     int parallel_degree,
+                                                     const ReqExtraInfo &extra_info):
   TicketObject(TicketType::select_object_content()),
   query_id_(query_id),
   fpdb_store_super_pop_(fpdb_store_super_pop),
   query_plan_string_(query_plan_string),
-  parallel_degree_(parallel_degree) {}
+  parallel_degree_(parallel_degree),
+  extra_info_(extra_info) {}
 
 std::shared_ptr<SelectObjectContentTicket> SelectObjectContentTicket::make(long query_id,
                                                                            const std::string &fpdb_store_super_pop,
                                                                            const std::string &query_plan_string,
-                                                                           int parallel_degree) {
+                                                                           int parallel_degree,
+                                                                           const ReqExtraInfo &extra_info) {
   return std::make_shared<SelectObjectContentTicket>(
-          query_id, fpdb_store_super_pop, query_plan_string, parallel_degree);
+          query_id, fpdb_store_super_pop, query_plan_string, parallel_degree, extra_info);
 }
 
 long SelectObjectContentTicket::query_id() const {
@@ -42,6 +45,10 @@ int SelectObjectContentTicket::parallel_degree() const {
   return parallel_degree_;
 }
 
+const ReqExtraInfo &SelectObjectContentTicket::extra_info() const {
+  return extra_info_;
+}
+
 tl::expected<std::string, std::string> SelectObjectContentTicket::serialize(bool pretty) {
   nlohmann::json document;
   document.emplace(TypeJSONName.data(), type()->name());
@@ -49,6 +56,7 @@ tl::expected<std::string, std::string> SelectObjectContentTicket::serialize(bool
   document.emplace(FPDBStoreSuperPOpJSONName.data(), fpdb_store_super_pop_);
   document.emplace(QueryPlanJSONName.data(), query_plan_string_);
   document.emplace(ParallelDegreeJSONName.data(), parallel_degree_);
+  document.emplace(ExtraInfoJSONName.data(), extra_info_.to_json());
   return document.dump(pretty ? 2 : -1);
 }
 
@@ -74,7 +82,16 @@ SelectObjectContentTicket::from_json(const nlohmann::json &jObj) {
   }
   auto parallel_degree = jObj[ParallelDegreeJSONName.data()].get<int>();
 
-  return SelectObjectContentTicket::make(query_id, fpdb_store_super_pop, query_plan_string, parallel_degree);
+  if (!jObj.contains(ExtraInfoJSONName.data())) {
+    return tl::make_unexpected(fmt::format("extra_info_ not specified in SelectObjectContentTicket JSON '{}'", to_string(jObj)));
+  }
+  auto exp_extra_info = ReqExtraInfo::from_json(jObj[ExtraInfoJSONName.data()]);
+  if (!exp_extra_info.has_value()) {
+    return tl::make_unexpected(exp_extra_info.error());
+  }
+
+  return SelectObjectContentTicket::make(query_id, fpdb_store_super_pop, query_plan_string,
+                                         parallel_degree, *exp_extra_info);
 }
 
 }

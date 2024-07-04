@@ -2,7 +2,6 @@
 // Created by Yifei Yang on 7/15/20.
 //
 
-#include <optional>
 #include "fpdb/expression/gandiva/StringLiteral.h"
 #include <gandiva/tree_expr_builder.h>
 #include <fmt/format.h>

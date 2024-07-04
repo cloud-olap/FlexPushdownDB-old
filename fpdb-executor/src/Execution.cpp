@@ -11,10 +11,9 @@
 #include <fpdb/executor/physical/filter/FilterPOp.h>
 #include <fpdb/executor/caf-serialization/CAFPOpSerializer.h>
 #include <fpdb/executor/message/TransferMetricsMessage.h>
-#include <fpdb/executor/message/DiskMetricsMessage.h>
-#include <fpdb/executor/message/PredTransMetricsMessage.h>
-#include <fpdb/executor/metrics/PredTransMetrics.h>
-#include <fpdb/util/Util.h>
+#include <fpdb/executor/flight/FlightClients.h>
+#include <fpdb/store/server/flight/Util.hpp>
+#include <fpdb/store/server/flight/adaptive/SetNumReqToTailCmd.hpp>
 #include <caf/io/all.hpp>
 #include <graphviz/gvc.h>
 
@@ -57,6 +56,48 @@ void Execution::preExecute() {
     auto result = opDirectory_.insert(POpDirectoryEntry(op, nullptr, false));
     if (!result.has_value()) {
       throw runtime_error(result.error());
+    }
+  }
+
+  // If using adapt_pushdown_manager v3 and enable pushback tail req double-exec,
+  // notify the storage num reqs to tail
+  if (ENABLE_ADAPTIVE_PUSHDOWN &&
+      store::server::flight::AdaptPushdownManagerV == store::server::flight::AdaptPushdownManagerVersion::V3 &&
+      store::server::flight::EnablePushbackTailReqDoubleExec) {
+    // collect num reqs
+    std::optional<int> port = std::nullopt;
+    std::unordered_map<std::string, int64_t> hostToNumReqs;
+    for (const auto &opIt: physicalPlan_->getPhysicalOps()) {
+      auto op = opIt.second;
+      if (op->getType() == POpType::FPDB_STORE_SUPER) {
+        auto typedOp = std::static_pointer_cast<FPDBStoreSuperPOp>(op);
+        ++hostToNumReqs[typedOp->getHost()];
+        if (!port.has_value()) {
+          port = typedOp->getFlightPort();
+        }
+      }
+    }
+    // send requests
+    if (port.has_value()) {
+      for (const auto &it: hostToNumReqs) {
+        auto client = flight::GlobalFlightClients.getFlightClient(it.first, *port);
+        auto cmdObj = store::server::flight::SetNumReqToTailCmd::make(it.second);
+        auto expCmd = cmdObj->serialize(false);
+        if (!expCmd.has_value()) {
+          throw std::runtime_error(expCmd.error());
+        }
+        auto descriptor = ::arrow::flight::FlightDescriptor::Command(*expCmd);
+        std::unique_ptr<arrow::flight::FlightStreamWriter> writer;
+        std::unique_ptr<arrow::flight::FlightMetadataReader> metadataReader;
+        auto status = client->DoPut(descriptor, nullptr, &writer, &metadataReader);
+        if (!status.ok()) {
+          throw std::runtime_error(status.message());
+        }
+        status = writer->Close();
+        if (!status.ok()) {
+          throw std::runtime_error(status.message());
+        }
+      }
     }
   }
 }
@@ -163,7 +204,7 @@ bool Execution::useDetached(const shared_ptr<PhysicalOp> &op) {
   // selectivity is low.
   return op->getType() == POpType::LOCAL_FILE_SCAN
          || op->getType() == POpType::REMOTE_FILE_SCAN
-         || (op->getType() == POpType::FPDB_STORE_SUPER && (ENABLE_BLOOM_FILTER_PUSHDOWN || ENABLE_FILTER_BITMAP_PUSHDOWN))
+         || (op->getType() == POpType::FPDB_STORE_SUPER && (ENABLE_ADAPTIVE_PUSHDOWN || ENABLE_FILTER_BITMAP_PUSHDOWN))
          || op->getType() == POpType::FPDB_STORE_TABLE_CACHE_LOAD
          || op->getType() == POpType::S3_GET
          || op->getType() == POpType::S3_SELECT;
@@ -251,12 +292,6 @@ void Execution::join() {
               case MessageType::DISK_METRICS: {
                 auto diskMetricsMsg = ((DiskMetricsMessage &) msg);
                 debugMetrics_.add(diskMetricsMsg.getDiskMetrics());
-                break;
-              }
-
-              case MessageType::PRED_TRANS_METRICS: {
-                auto ptMetricsMsg = ((PredTransMetricsMessage &) msg);
-                debugMetrics_.add(ptMetricsMsg.getPTMetrics());
                 break;
               }
 #endif
@@ -424,7 +459,17 @@ string Execution::showMetrics(bool showOpTimes, bool showScanMetrics) {
   }
 
   ss << endl;
-  ss << "Metrics |" << endl << endl;
+  ss << fmt::format("Metrics (id: {}) |", queryId_) << endl << endl;
+  long totalProcessingTime = 0;
+  for (auto &entry : opDirectory_) {
+    (*rootActor_)->request(entry.second.getActorHandle(), ::caf::infinite, GetProcessingTimeAtom_v).receive(
+            [&](long processingTime) {
+              totalProcessingTime += processingTime;
+            },
+            [&](const ::caf::error&  error){
+              throw runtime_error(to_string(error));
+            });
+  }
 
   if (showOpTimes) {
     auto totalExecutionTime = getElapsedTime();
@@ -435,8 +480,6 @@ string Execution::showMetrics(bool showOpTimes, bool showScanMetrics) {
     ss << left << setw(60) << formattedExecutionTime.str();
     ss << endl;
     ss << endl;
-
-    fetchOpExecTimes();
 
     ss << left << setw(120) << "Operator Execution Times" << endl;
     ss << setfill(' ');
@@ -456,7 +499,15 @@ string Execution::showMetrics(bool showOpTimes, bool showScanMetrics) {
 
     for (auto &entry : opDirectory_) {
       auto operatorName = entry.first;
-      long processingTime = opExecTimes_[operatorName];
+
+      long processingTime;
+      (*rootActor_)->request(entry.second.getActorHandle(), ::caf::infinite, GetProcessingTimeAtom_v).receive(
+              [&](long time) {
+                processingTime = time;
+              },
+              [&](const ::caf::error &error) {
+                throw runtime_error(to_string(error));
+              });
 
       auto op = entry.second.getDef();
       string typeString = op->getTypeString();
@@ -466,7 +517,7 @@ string Execution::showMetrics(bool showOpTimes, bool showScanMetrics) {
         opTypeToRuntime[typeString] = opTypeToRuntime[typeString] + processingTime;
       }
 
-      auto processingFraction = (double) processingTime / (double) totalOpExecTime_;
+      auto processingFraction = (double) processingTime / (double) totalProcessingTime;
       stringstream formattedProcessingTime;
       formattedProcessingTime << processingTime << " \u33B1" << " (" << ((double) processingTime / 1000000000.0)
                               << " secs)";
@@ -487,7 +538,7 @@ string Execution::showMetrics(bool showOpTimes, bool showScanMetrics) {
       formattedOpTime << ((double) opTime.second / 1000000000.0) << " secs";
       ss << left << setw(60) << opTime.first;
       ss << left << setw(40) << formattedOpTime.str();
-      ss << left << setw(20) << ((double) opTime.second / (double) totalOpExecTime_) * 100.0;
+      ss << left << setw(20) << ((double) opTime.second / (double) totalProcessingTime) * 100.0;
       ss << endl;
     }
 
@@ -495,7 +546,7 @@ string Execution::showMetrics(bool showOpTimes, bool showScanMetrics) {
     ss << setfill(' ');
 
     stringstream formattedProcessingTime;
-    formattedProcessingTime << totalOpExecTime_ << " \u33B1" << " (" << ((double) totalOpExecTime_ / 1000000000.0)
+    formattedProcessingTime << totalProcessingTime << " \u33B1" << " (" << ((double) totalProcessingTime / 1000000000.0)
                             << " secs)";
     ss << left << setw(60) << "Total ";
     ss << left << setw(40) << formattedProcessingTime.str();
@@ -655,201 +706,48 @@ string Execution::showMetrics(bool showOpTimes, bool showScanMetrics) {
 }
 
 #if SHOW_DEBUG_METRICS == true
-string Execution::showDebugMetrics() {
+string Execution::showDebugMetrics() const{
   stringstream ss;
+  ss << endl;
+  ss << fmt::format("Debug Metrics (id: {}) |", queryId_) << endl << endl;
 
-  if (metrics::SHOW_TRANSFER_METRICS) {
-    ss << endl << "Data Transfer Metrics |" << endl << endl;
-    stringstream formattedBytesFromStore;
-    int64_t bytesFromStore = debugMetrics_.getTransferMetrics().getBytesFromStore();
-    formattedBytesFromStore << bytesFromStore << " B" << " ("
-                            << ((double) bytesFromStore / 1024.0 / 1024.0 / 1024.0) << " GB)";
+  stringstream formattedBytesFromStore;
+  int64_t bytesFromStore = debugMetrics_.getTransferMetrics().getBytesFromStore();
+  formattedBytesFromStore << bytesFromStore << " B" << " ("
+                          << ((double) bytesFromStore / 1024.0 / 1024.0 / 1024.0) << " GB)";
 
-    ss << left << setw(60) << "Bytes transferred from store";
-    ss << left << setw(60) << formattedBytesFromStore.str();
-    ss << endl;
+  ss << left << setw(60) << "Bytes transferred from store";
+  ss << left << setw(60) << formattedBytesFromStore.str();
+  ss << endl;
 
-    stringstream formattedBytesToStore;
-    int64_t bytesToStore = debugMetrics_.getTransferMetrics().getBytesToStore();
-    formattedBytesToStore << bytesToStore << " B" << " ("
-                          << ((double) bytesToStore / 1024.0 / 1024.0 / 1024.0) << " GB)";
+  stringstream formattedBytesToStore;
+  int64_t bytesToStore = debugMetrics_.getTransferMetrics().getBytesToStore();
+  formattedBytesToStore << bytesToStore << " B" << " ("
+                        << ((double) bytesToStore / 1024.0 / 1024.0 / 1024.0) << " GB)";
 
-    ss << left << setw(60) << "Bytes transferred to store";
-    ss << left << setw(60) << formattedBytesToStore.str();
-    ss << endl;
+  ss << left << setw(60) << "Bytes transferred to store";
+  ss << left << setw(60) << formattedBytesToStore.str();
+  ss << endl;
 
-    stringstream formattedBytesInterCompute;
-    int64_t bytesInterCompute = debugMetrics_.getTransferMetrics().getBytesInterCompute();
-    formattedBytesInterCompute << bytesInterCompute << " B" << " ("
-                               << ((double) bytesInterCompute / 1024.0 / 1024.0 / 1024.0) << " GB)";
+  stringstream formattedBytesInterCompute;
+  int64_t bytesInterCompute = debugMetrics_.getTransferMetrics().getBytesInterCompute();
+  formattedBytesInterCompute << bytesInterCompute << " B" << " ("
+                             << ((double) bytesInterCompute / 1024.0 / 1024.0 / 1024.0) << " GB)";
 
-    ss << left << setw(60) << "Bytes transferred across compute nodes";
-    ss << left << setw(60) << formattedBytesInterCompute.str();
-    ss << endl;
+  ss << left << setw(60) << "Bytes transferred across compute nodes";
+  ss << left << setw(60) << formattedBytesInterCompute.str();
+  ss << endl;
 
-    stringstream formattedBytesRemote;
-    int64_t bytesRemote = bytesFromStore + bytesToStore + bytesInterCompute;
-    formattedBytesRemote << bytesRemote << " B" << " ("
-                         << ((double) bytesRemote / 1024.0 / 1024.0 / 1024.0) << " GB)";
+  stringstream formattedBytesRemote;
+  int64_t bytesRemote = bytesFromStore + bytesToStore + bytesInterCompute;
+  formattedBytesRemote << bytesRemote << " B" << " ("
+                       << ((double) bytesRemote / 1024.0 / 1024.0 / 1024.0) << " GB)";
 
-    ss << left << setw(60) << "Bytes transferred totally";
-    ss << left << setw(60) << formattedBytesRemote.str();
-    ss << endl;
-  }
+  ss << left << setw(60) << "Bytes transferred totally";
+  ss << left << setw(60) << formattedBytesRemote.str();
+  ss << endl;
 
-  if (metrics::SHOW_PRED_TRANS_METRICS) {
-    auto metrics = debugMetrics_.getPredTransMetrics().getMetrics();
-    ss << endl << "Predicate Transfer Metrics |" << endl;
-
-    if (!metrics.empty()) {
-      fetchOpExecTimes();
-
-      stringstream formattedPredTransTime;
-      formattedPredTransTime << ((double) totalPredTransOpTime_ / 1000000000.0) << " secs" << " ("
-                             << setprecision(3)
-                             << ((double) totalPredTransOpTime_) * 100 / ((double) totalOpExecTime_) << "%)";
-      stringstream formattedPostPredTransTime;
-      formattedPostPredTransTime << ((double) totalPostPredTransOpTime_ / 1000000000.0) << " secs" << " ("
-                                 << setprecision(3)
-                                 << ((double) totalPostPredTransOpTime_) * 100 / ((double) totalOpExecTime_) << "%)";
-
-      ss << endl;
-      ss << left << setw(60) << "Predicate Transfer Time";
-      ss << formattedPredTransTime.str();
-      ss << endl;
-
-      ss << endl;
-      ss << left << setw(60) << "Post Predicate Transfer (Join Phase) Time";
-      ss << formattedPostPredTransTime.str();
-      ss << endl;
-
-      for (const auto &unit: metrics) {
-        ss << endl;
-        ss << left << setw(60) << "Prephysical Op ID";
-        ss << "[" << unit.prePOpId_ << "]";
-        ss << endl;
-
-        ss << left << setw(60) << "Collector POp Type";
-        ss << unit.collectorPOpTypeStr_;
-        ss << endl;
-
-        ss << left << setw(60) << "Predicate Transfer Type";
-        ss << metrics::PredTransMetrics::PTMetricsUnitTypeToStr(unit.type_);
-        ss << endl;
-
-        ss << left << setw(60) << "Rows after Predicate Transfer";
-        ss << unit.numRows_;
-        ss << endl;
-
-        ss << left << setw(60) << "Schema" << endl;
-        auto splitStr = fpdb::util::split(unit.schema_->ToString(), "\n");
-        for (const auto &str: splitStr) {
-          ss << "- " << str << endl;
-        }
-      }
-    }
-  }
-
-  if (metrics::SHOW_HASH_JOIN_METRICS) {
-    ss << endl << "Hash Join Metrics |" << endl;
-
-    ss << left << setw(110) << setfill('-') << "" << endl;
-    ss << setfill(' ');
-    ss << left << setw(65) << "Operator";
-    ss << left << setw(15) << "Time (ms)";
-    ss << left << setw(15) << "Build Size";
-    ss << left << setw(15) << "Probe Size";
-    ss << endl;
-    ss << left << setw(110) << setfill('-') << "" << endl;
-    ss << setfill(' ');
-
-    fetchOpExecTimes();
-
-    int64_t totalNumBuild = 0;
-    int64_t totalNumProbe = 0;
-    for (auto &entry : opDirectory_) {
-      auto operatorName = entry.first;
-      auto op = entry.second.getDef();
-      if (op->getType() == POpType::HASH_JOIN_ARROW) {
-        long processingTime = opExecTimes_[operatorName];
-        auto typedOp = std::static_pointer_cast<join::HashJoinArrowPOp>(op);
-        ss << left << setw(65) << operatorName;
-        ss << left << setw(15) << setprecision(3) << ((double) processingTime / 1000000.0);
-        ss << left << setw(15) << typedOp->getNumRowsBuild();
-        ss << left << setw(15) << typedOp->getNumRowsProbe();
-        ss << endl;
-        totalNumBuild += typedOp->getNumRowsBuild();
-        totalNumProbe += typedOp->getNumRowsProbe();
-      }
-    }
-
-    ss << left << setw(110) << setfill('-') << "" << endl;
-    ss << setfill(' ');
-    ss << endl;
-
-    ss << endl;
-    ss << left << setw(60) << "Total num hash table build";
-    ss << totalNumBuild;
-    ss << endl;
-
-    ss << endl;
-    ss << left << setw(60) << "Total num hash table probe";
-    ss << totalNumProbe;
-    ss << endl;
-  }
-
-  if (metrics::SHOW_BLOOM_FILTER_METRICS) {
-    ss << endl << "Hash Join Metrics |" << endl;
-
-    ss << left << setw(95) << setfill('-') << "" << endl;
-    ss << setfill(' ');
-    ss << left << setw(65) << "Operator";
-    ss << left << setw(15) << "Time (ms)";
-    ss << left << setw(15) << "Input Size";
-    ss << endl;
-    ss << left << setw(95) << setfill('-') << "" << endl;
-    ss << setfill(' ');
-
-    fetchOpExecTimes();
-
-    int64_t totalNumInsert = 0;
-    int64_t totalNumFind = 0;
-    for (auto &entry : opDirectory_) {
-      auto operatorName = entry.first;
-      auto op = entry.second.getDef();
-      if (op->getType() == POpType::BLOOM_FILTER_CREATE || op->getType() == POpType::BLOOM_FILTER_USE) {
-        long processingTime = opExecTimes_[operatorName];
-        ss << left << setw(65) << operatorName;
-        ss << left << setw(15) << setprecision(3) << ((double) processingTime / 1000000.0);
-        if (op->getType() == POpType::BLOOM_FILTER_CREATE) {
-          int64_t numRowsInput = std::static_pointer_cast<bloomfilter::BloomFilterCreatePOp>(op)->getNumRowsInput();
-          ss << left << setw(15) << numRowsInput;
-          totalNumInsert += numRowsInput;
-        } else {
-          int64_t numRowsInput = std::static_pointer_cast<bloomfilter::BloomFilterUsePOp>(op)->getNumRowsInput();
-          ss << left << setw(15) << numRowsInput;
-          totalNumFind += numRowsInput;
-        }
-        ss << endl;
-      }
-    }
-
-    ss << left << setw(95) << setfill('-') << "" << endl;
-    ss << setfill(' ');
-    ss << endl;
-
-    ss << endl;
-    ss << left << setw(60) << "Total num BF insert";
-    ss << totalNumInsert;
-    ss << endl;
-
-    ss << endl;
-    ss << left << setw(60) << "Total num BF find";
-    ss << totalNumFind;
-    ss << endl;
-  }
-
-  if (ENABLE_ADAPTIVE_PUSHDOWN && metrics::SHOW_NUM_PUSHDOWN_FALL_BACK) {
+  if (ENABLE_ADAPTIVE_PUSHDOWN) {
     int numFPDBStoreSuperPOps = 0;
     for (const auto &opIt: physicalPlan_->getPhysicalOps()) {
       if (opIt.second->getType() == POpType::FPDB_STORE_SUPER) {
@@ -873,29 +771,5 @@ const metrics::DebugMetrics &Execution::getDebugMetrics() const {
   return debugMetrics_;
 }
 #endif
-
-void Execution::fetchOpExecTimes() {
-  if (isOpExecTimeFetched) {
-    return;
-  }
-  for (auto &entry : opDirectory_) {
-    (*rootActor_)->request(entry.second.getActorHandle(), ::caf::infinite, GetProcessingTimeAtom_v).receive(
-            [&](long processingTime) {
-              totalOpExecTime_ += processingTime;
-              opExecTimes_[entry.first] = processingTime;
-#if SHOW_DEBUG_METRICS == true
-              if (entry.second.getDef()->inPredTransPhase()) {
-                totalPredTransOpTime_ += processingTime;
-              } else {
-                totalPostPredTransOpTime_ += processingTime;
-              }
-#endif
-            },
-            [&](const ::caf::error&  error){
-              throw runtime_error(to_string(error));
-            });
-  }
-  isOpExecTimeFetched = true;
-}
 
 }

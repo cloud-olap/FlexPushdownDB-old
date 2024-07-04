@@ -7,10 +7,9 @@
 namespace fpdb::plan::prephysical {
 
 AggregatePrePOp::AggregatePrePOp(uint id,
-                                 double rowCount,
                                  const vector<string> &aggOutputColumnNames,
                                  const vector<shared_ptr<AggregatePrePFunction>> &functions):
-  PrePhysicalOp(id, AGGREGATE, rowCount),
+  PrePhysicalOp(id, AGGREGATE),
   aggOutputColumnNames_(aggOutputColumnNames),
   functions_(functions) {}
 

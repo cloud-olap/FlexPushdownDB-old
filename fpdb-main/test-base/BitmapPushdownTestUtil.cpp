@@ -6,7 +6,7 @@
 #include "TestUtil.h"
 #include "Globals.h"
 #include <fpdb/executor/physical/Globals.h>
-#include <fpdb/plan/Globals.h>
+#include <fpdb/plan/prephysical/separable/Globals.h>
 #include <doctest/doctest.h>
 #include <fmt/format.h>
 
@@ -74,12 +74,12 @@ void BitmapPushdownTestUtil::set_pushdown_flags(std::unordered_map<std::string, 
   flags["group"] = fpdb::executor::physical::ENABLE_GROUP_BY_PUSHDOWN;
   flags["bloom_filter"] = fpdb::executor::physical::ENABLE_BLOOM_FILTER_PUSHDOWN;
   flags["shuffle"] = fpdb::executor::physical::ENABLE_SHUFFLE_PUSHDOWN;
-  flags["co_located_join"] = fpdb::plan::ENABLE_CO_LOCATED_JOIN_PUSHDOWN;
+  flags["co_located_join"] = fpdb::plan::prephysical::separable::ENABLE_CO_LOCATED_JOIN_PUSHDOWN;
   flags["filter_bitmap"] = fpdb::executor::physical::ENABLE_FILTER_BITMAP_PUSHDOWN;
   fpdb::executor::physical::ENABLE_GROUP_BY_PUSHDOWN = false;
   fpdb::executor::physical::ENABLE_BLOOM_FILTER_PUSHDOWN = false;
   fpdb::executor::physical::ENABLE_SHUFFLE_PUSHDOWN = false;
-  fpdb::plan::ENABLE_CO_LOCATED_JOIN_PUSHDOWN = false;
+  fpdb::plan::prephysical::separable::ENABLE_CO_LOCATED_JOIN_PUSHDOWN = false;
   fpdb::executor::physical::ENABLE_FILTER_BITMAP_PUSHDOWN = true;
 }
 
@@ -87,7 +87,7 @@ void BitmapPushdownTestUtil::reset_pushdown_flags(std::unordered_map<std::string
   fpdb::executor::physical::ENABLE_GROUP_BY_PUSHDOWN = flags["group"];
   fpdb::executor::physical::ENABLE_BLOOM_FILTER_PUSHDOWN = flags["bloom_filter"];
   fpdb::executor::physical::ENABLE_SHUFFLE_PUSHDOWN = flags["shuffle"];
-  fpdb::plan::ENABLE_CO_LOCATED_JOIN_PUSHDOWN = flags["co_located_join"];
+  fpdb::plan::prephysical::separable::ENABLE_CO_LOCATED_JOIN_PUSHDOWN = flags["co_located_join"];
   fpdb::executor::physical::ENABLE_FILTER_BITMAP_PUSHDOWN = flags["filter_bitmap"];
 }
 

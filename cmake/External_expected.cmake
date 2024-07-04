@@ -1,6 +1,6 @@
 # std::expected
 
-set(EXPECTED_VERSION "v1.1.0")
+set(EXPECTED_VERSION "v1.0.0")
 set(EXPECTED_GIT_URL "https://github.com/TartanLlama/expected.git")
 
 include(ExternalProject)

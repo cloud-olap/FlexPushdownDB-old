@@ -17,7 +17,6 @@
 #include <atomic>
 #include <cstdint>
 #include <memory>
-#include <optional>
 #include "PartitionUtil.h"
 #include "Util.h"
 #include "arrow/compute/exec/util.h"

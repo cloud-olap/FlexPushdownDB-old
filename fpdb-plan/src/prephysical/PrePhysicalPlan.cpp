@@ -2,7 +2,6 @@
 // Created by Yifei Yang on 10/31/21.
 //
 
-#include <optional>
 #include <fpdb/plan/prephysical/PrePhysicalPlan.h>
 #include <fpdb/plan/prephysical/AggregatePrePFunction.h>
 #include <fpdb/plan/prephysical/ProjectPrePOp.h>

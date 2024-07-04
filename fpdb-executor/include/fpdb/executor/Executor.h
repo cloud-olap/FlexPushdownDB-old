@@ -49,6 +49,7 @@ public:
    * @return query result and execution time
    */
   pair<shared_ptr<TupleSet>, long> execute(
+          long queryId,
           const shared_ptr<PhysicalPlan> &physicalPlan,
           bool isDistributed,
           bool collAdaptPushdownMetrics = false,
@@ -69,7 +70,6 @@ public:
 
 private:
   bool isCacheUsed();
-  long nextQueryId();
 
   shared_ptr<::caf::actor_system> actorSystem_;
   vector<::caf::node_id> nodes_;
@@ -78,7 +78,6 @@ private:
   vector<::caf::actor> remoteSegmentCacheActors_;   // used in distributed execution
   shared_ptr<CachingPolicy> cachingPolicy_;
   shared_ptr<Mode> mode_;
-  std::atomic<long> queryCounter_;
   bool running_;
 
   bool showOpTimes_;

@@ -45,7 +45,7 @@ public:
   int64_t getBytesRead() const;
 
 private:
-  tl::expected<int64_t, std::string> read(int64_t nbytes, char* out);
+  tl::expected<int64_t, std::string> read(int64_t nbytes, uint8_t* out);
 
   std::string bucket_;
   std::string object_;

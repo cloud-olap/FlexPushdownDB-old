@@ -14,7 +14,7 @@ namespace fpdb::plan::prephysical {
 
 class SortPrePOp: public PrePhysicalOp {
 public:
-  SortPrePOp(uint id, double rowCount, const vector<SortKey> &sortKeys);
+  SortPrePOp(uint id, const vector<SortKey> &sortKeys);
 
   string getTypeString() override;
 

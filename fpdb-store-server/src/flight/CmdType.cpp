@@ -34,6 +34,10 @@ std::shared_ptr<CmdType> CmdType::clear_bitmap() {
   return std::make_shared<CmdType>(CmdTypeId::CLEAR_BITMAP, ClearBitmapCmdTypeName.data());
 }
 
+std::shared_ptr<CmdType> CmdType::clear_table() {
+  return std::make_shared<CmdType>(CmdTypeId::CLEAR_TABLE, ClearTableCmdTypeName.data());
+}
+
 std::shared_ptr<CmdType> CmdType::put_adapt_pushdown_metrics() {
   return std::make_shared<CmdType>(CmdTypeId::PUT_ADAPT_PUSHDOWN_METRICS, PutAdaptPushdownMetricsCmdTypeName.data());
 }
@@ -44,6 +48,18 @@ std::shared_ptr<CmdType> CmdType::clear_adapt_pushdown_metrics() {
 
 std::shared_ptr<CmdType> CmdType::set_adapt_pushdown() {
   return std::make_shared<CmdType>(CmdTypeId::SET_ADAPT_PUSHDOWN, SetAdaptPushdownCmdTypeName.data());
+}
+
+std::shared_ptr<CmdType> CmdType::pushback_complete() {
+  return std::make_shared<CmdType>(CmdTypeId::PUSHBACK_COMPLETE, PushbackCompleteCmdTypeName.data());
+}
+
+std::shared_ptr<CmdType> CmdType::pushback_double_exec() {
+  return std::make_shared<CmdType>(CmdTypeId::PUSHBACK_DOUBLE_EXEC, PushbackDoubleExecCmdTypeName.data());
+}
+
+std::shared_ptr<CmdType> CmdType::set_num_req_to_tail() {
+  return std::make_shared<CmdType>(CmdTypeId::SET_NUM_REQ_TO_TAIL, SetNumReqToTailCmdTypeName.data());
 }
 
 } // namespace fpdb::store::server::flight

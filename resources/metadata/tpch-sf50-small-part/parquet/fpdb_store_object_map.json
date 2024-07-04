@@ -1,0 +1,3622 @@
+{
+  "schemaName": "tpch-sf50-small-part/parquet/",
+  "numNodes": 1,
+  "objectMap": [
+    {
+      "object": "nation.parquet",
+      "nodeId": 0
+    },
+    {
+      "object": "region.parquet",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.0",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.1",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.2",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.3",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.4",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.5",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.6",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.7",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.8",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.9",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.10",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.11",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.12",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.13",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.14",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.15",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.16",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.17",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.18",
+      "nodeId": 0
+    },
+    {
+      "object": "part_sharded/part.parquet.19",
+      "nodeId": 0
+    },
+    {
+      "object": "supplier_sharded/supplier.parquet.0",
+      "nodeId": 0
+    },
+    {
+      "object": "supplier_sharded/supplier.parquet.1",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.0",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.1",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.2",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.3",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.4",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.5",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.6",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.7",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.8",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.9",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.10",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.11",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.12",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.13",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.14",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.15",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.16",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.17",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.18",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.19",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.20",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.21",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.22",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.23",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.24",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.25",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.26",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.27",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.28",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.29",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.30",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.31",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.32",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.33",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.34",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.35",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.36",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.37",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.38",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.39",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.40",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.41",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.42",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.43",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.44",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.45",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.46",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.47",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.48",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.49",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.50",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.51",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.52",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.53",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.54",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.55",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.56",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.57",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.58",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.59",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.60",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.61",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.62",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.63",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.64",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.65",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.66",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.67",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.68",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.69",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.70",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.71",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.72",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.73",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.74",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.75",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.76",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.77",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.78",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.79",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.80",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.81",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.82",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.83",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.84",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.85",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.86",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.87",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.88",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.89",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.90",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.91",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.92",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.93",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.94",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.95",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.96",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.97",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.98",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.99",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.100",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.101",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.102",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.103",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.104",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.105",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.106",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.107",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.108",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.109",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.110",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.111",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.112",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.113",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.114",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.115",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.116",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.117",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.118",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.119",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.120",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.121",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.122",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.123",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.124",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.125",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.126",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.127",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.128",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.129",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.130",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.131",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.132",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.133",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.134",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.135",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.136",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.137",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.138",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.139",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.140",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.141",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.142",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.143",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.144",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.145",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.146",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.147",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.148",
+      "nodeId": 0
+    },
+    {
+      "object": "partsupp_sharded/partsupp.parquet.149",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.0",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.1",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.2",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.3",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.4",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.5",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.6",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.7",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.8",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.9",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.10",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.11",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.12",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.13",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.14",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.15",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.16",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.17",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.18",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.19",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.20",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.21",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.22",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.23",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.24",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.25",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.26",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.27",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.28",
+      "nodeId": 0
+    },
+    {
+      "object": "customer_sharded/customer.parquet.29",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.0",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.1",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.2",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.3",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.4",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.5",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.6",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.7",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.8",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.9",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.10",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.11",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.12",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.13",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.14",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.15",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.16",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.17",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.18",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.19",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.20",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.21",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.22",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.23",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.24",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.25",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.26",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.27",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.28",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.29",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.30",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.31",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.32",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.33",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.34",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.35",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.36",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.37",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.38",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.39",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.40",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.41",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.42",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.43",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.44",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.45",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.46",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.47",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.48",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.49",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.50",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.51",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.52",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.53",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.54",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.55",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.56",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.57",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.58",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.59",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.60",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.61",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.62",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.63",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.64",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.65",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.66",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.67",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.68",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.69",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.70",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.71",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.72",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.73",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.74",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.75",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.76",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.77",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.78",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.79",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.80",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.81",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.82",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.83",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.84",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.85",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.86",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.87",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.88",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.89",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.90",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.91",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.92",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.93",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.94",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.95",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.96",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.97",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.98",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.99",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.100",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.101",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.102",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.103",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.104",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.105",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.106",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.107",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.108",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.109",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.110",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.111",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.112",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.113",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.114",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.115",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.116",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.117",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.118",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.119",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.120",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.121",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.122",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.123",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.124",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.125",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.126",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.127",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.128",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.129",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.130",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.131",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.132",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.133",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.134",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.135",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.136",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.137",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.138",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.139",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.140",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.141",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.142",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.143",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.144",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.145",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.146",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.147",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.148",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.149",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.150",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.151",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.152",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.153",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.154",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.155",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.156",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.157",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.158",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.159",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.160",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.161",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.162",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.163",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.164",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.165",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.166",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.167",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.168",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.169",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.170",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.171",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.172",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.173",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.174",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.175",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.176",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.177",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.178",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.179",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.180",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.181",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.182",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.183",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.184",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.185",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.186",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.187",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.188",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.189",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.190",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.191",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.192",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.193",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.194",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.195",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.196",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.197",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.198",
+      "nodeId": 0
+    },
+    {
+      "object": "orders_sharded/orders.parquet.199",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.0",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.1",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.2",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.3",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.4",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.5",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.6",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.7",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.8",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.9",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.10",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.11",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.12",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.13",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.14",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.15",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.16",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.17",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.18",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.19",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.20",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.21",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.22",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.23",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.24",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.25",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.26",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.27",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.28",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.29",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.30",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.31",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.32",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.33",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.34",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.35",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.36",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.37",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.38",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.39",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.40",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.41",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.42",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.43",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.44",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.45",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.46",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.47",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.48",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.49",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.50",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.51",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.52",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.53",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.54",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.55",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.56",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.57",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.58",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.59",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.60",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.61",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.62",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.63",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.64",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.65",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.66",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.67",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.68",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.69",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.70",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.71",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.72",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.73",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.74",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.75",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.76",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.77",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.78",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.79",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.80",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.81",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.82",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.83",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.84",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.85",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.86",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.87",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.88",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.89",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.90",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.91",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.92",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.93",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.94",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.95",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.96",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.97",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.98",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.99",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.100",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.101",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.102",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.103",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.104",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.105",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.106",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.107",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.108",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.109",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.110",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.111",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.112",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.113",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.114",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.115",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.116",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.117",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.118",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.119",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.120",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.121",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.122",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.123",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.124",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.125",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.126",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.127",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.128",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.129",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.130",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.131",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.132",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.133",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.134",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.135",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.136",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.137",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.138",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.139",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.140",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.141",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.142",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.143",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.144",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.145",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.146",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.147",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.148",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.149",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.150",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.151",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.152",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.153",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.154",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.155",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.156",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.157",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.158",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.159",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.160",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.161",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.162",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.163",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.164",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.165",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.166",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.167",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.168",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.169",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.170",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.171",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.172",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.173",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.174",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.175",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.176",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.177",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.178",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.179",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.180",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.181",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.182",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.183",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.184",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.185",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.186",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.187",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.188",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.189",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.190",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.191",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.192",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.193",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.194",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.195",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.196",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.197",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.198",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.199",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.200",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.201",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.202",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.203",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.204",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.205",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.206",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.207",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.208",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.209",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.210",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.211",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.212",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.213",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.214",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.215",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.216",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.217",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.218",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.219",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.220",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.221",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.222",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.223",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.224",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.225",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.226",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.227",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.228",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.229",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.230",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.231",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.232",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.233",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.234",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.235",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.236",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.237",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.238",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.239",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.240",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.241",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.242",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.243",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.244",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.245",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.246",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.247",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.248",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.249",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.250",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.251",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.252",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.253",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.254",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.255",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.256",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.257",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.258",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.259",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.260",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.261",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.262",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.263",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.264",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.265",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.266",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.267",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.268",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.269",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.270",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.271",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.272",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.273",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.274",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.275",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.276",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.277",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.278",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.279",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.280",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.281",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.282",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.283",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.284",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.285",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.286",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.287",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.288",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.289",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.290",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.291",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.292",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.293",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.294",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.295",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.296",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.297",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.298",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.299",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.300",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.301",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.302",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.303",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.304",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.305",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.306",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.307",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.308",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.309",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.310",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.311",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.312",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.313",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.314",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.315",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.316",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.317",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.318",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.319",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.320",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.321",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.322",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.323",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.324",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.325",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.326",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.327",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.328",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.329",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.330",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.331",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.332",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.333",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.334",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.335",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.336",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.337",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.338",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.339",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.340",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.341",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.342",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.343",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.344",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.345",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.346",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.347",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.348",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.349",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.350",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.351",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.352",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.353",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.354",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.355",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.356",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.357",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.358",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.359",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.360",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.361",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.362",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.363",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.364",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.365",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.366",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.367",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.368",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.369",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.370",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.371",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.372",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.373",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.374",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.375",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.376",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.377",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.378",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.379",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.380",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.381",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.382",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.383",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.384",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.385",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.386",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.387",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.388",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.389",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.390",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.391",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.392",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.393",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.394",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.395",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.396",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.397",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.398",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.399",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.400",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.401",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.402",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.403",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.404",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.405",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.406",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.407",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.408",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.409",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.410",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.411",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.412",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.413",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.414",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.415",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.416",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.417",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.418",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.419",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.420",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.421",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.422",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.423",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.424",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.425",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.426",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.427",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.428",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.429",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.430",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.431",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.432",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.433",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.434",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.435",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.436",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.437",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.438",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.439",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.440",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.441",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.442",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.443",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.444",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.445",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.446",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.447",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.448",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.449",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.450",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.451",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.452",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.453",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.454",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.455",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.456",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.457",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.458",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.459",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.460",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.461",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.462",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.463",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.464",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.465",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.466",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.467",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.468",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.469",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.470",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.471",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.472",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.473",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.474",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.475",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.476",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.477",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.478",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.479",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.480",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.481",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.482",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.483",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.484",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.485",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.486",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.487",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.488",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.489",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.490",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.491",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.492",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.493",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.494",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.495",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.496",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.497",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.498",
+      "nodeId": 0
+    },
+    {
+      "object": "lineitem_sharded/lineitem.parquet.499",
+      "nodeId": 0
+    }
+  ]
+}

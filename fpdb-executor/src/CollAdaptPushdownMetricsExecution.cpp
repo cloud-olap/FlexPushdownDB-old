@@ -8,7 +8,7 @@
 #include <fpdb/executor/physical/file/RemoteFileScanPOp.h>
 #include <fpdb/executor/physical/fpdb-store/FPDBStoreSuperPOp.h>
 #include <fpdb/executor/flight/FlightClients.h>
-#include <fpdb/store/server/flight/PutAdaptPushdownMetricsCmd.hpp>
+#include <fpdb/store/server/flight/adaptive/PutAdaptPushdownMetricsCmd.hpp>
 
 namespace fpdb::executor {
 

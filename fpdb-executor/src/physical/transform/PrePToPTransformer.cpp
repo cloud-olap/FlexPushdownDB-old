@@ -5,7 +5,6 @@
 #include <fpdb/executor/physical/transform/PrePToPTransformer.h>
 #include <fpdb/executor/physical/transform/PrePToS3PTransformer.h>
 #include <fpdb/executor/physical/transform/PrePToFPDBStorePTransformer.h>
-#include <fpdb/executor/physical/transform/pred-trans/PrePToPTransformerForPredTrans.h>
 #include <fpdb/executor/physical/sort/SortPOp.h>
 #include <fpdb/executor/physical/limitsort/LimitSortPOp.h>
 #include <fpdb/executor/physical/aggregate/AggregatePOp.h>
@@ -29,9 +28,6 @@
 #include <fpdb/executor/physical/transform/PrePToPTransformerUtil.h>
 #include <fpdb/executor/physical/transform/StoreTransformTraits.h>
 #include <fpdb/executor/physical/Globals.h>
-#include <fpdb/executor/metrics/Globals.h>
-#include <fpdb/plan/Globals.h>
-#include <fpdb/plan/prephysical/Util.h>
 #include <fpdb/catalogue/obj-store/ObjStoreCatalogueEntry.h>
 #include <fpdb/catalogue/obj-store/s3/S3Connector.h>
 #include <fpdb/catalogue/obj-store/fpdb-store/FPDBStoreConnector.h>
@@ -57,17 +53,8 @@ shared_ptr<PhysicalPlan> PrePToPTransformer::transform(const shared_ptr<PrePhysi
                                                        const shared_ptr<Mode> &mode,
                                                        int parallelDegree,
                                                        int numNodes) {
-  if (ENABLE_PRED_TRANS) {
-    return PrePToPTransformerForPredTrans::transform(prePhysicalPlan,
-                                                     catalogueEntry,
-                                                     objStoreConnector,
-                                                     mode,
-                                                     parallelDegree,
-                                                     numNodes);
-  } else {
-    PrePToPTransformer transformer(prePhysicalPlan, catalogueEntry, objStoreConnector, mode, parallelDegree, numNodes);
-    return transformer.transform();
-  }
+  PrePToPTransformer transformer(prePhysicalPlan, catalogueEntry, objStoreConnector, mode, parallelDegree, numNodes);
+  return transformer.transform();
 }
 
 shared_ptr<PhysicalPlan> PrePToPTransformer::transform() {
@@ -125,21 +112,7 @@ vector<shared_ptr<PhysicalOp>> PrePToPTransformer::transformDfs(const shared_ptr
     }
     case PrePOpType::SEPARABLE_SUPER: {
       const auto &separableSuperPrePOp = std::static_pointer_cast<SeparableSuperPrePOp>(prePOp);
-      const auto &transRes = transformSeparableSuper(separableSuperPrePOp);
-
-#if SHOW_DEBUG_METRICS == true
-    // collect predicate transfer baseline metrics
-    if (type_ == PrePToPTransformerType::REGULAR) {
-      for (const auto &op: transRes) {
-        op->setCollPredTransMetrics(prePOp->getId(), metrics::PredTransMetrics::PTMetricsUnitType::LOCAL_FILTER);
-        // classify ops into pred-trans phase since they are applied to base tables
-        op->setInPredTransPhase(true);
-      }
-      prePOpIdToConnOpsForPredTrans_[prePOp->getId()] = transRes;
-    }
-#endif
-
-      return transRes;
+      return transformSeparableSuper(separableSuperPrePOp);
     }
     default: {
       throw runtime_error(fmt::format("Unsupported prephysical operator type: {}", prePOp->getTypeString()));
@@ -306,37 +279,11 @@ PrePToPTransformer::transformAggregate(const shared_ptr<AggregatePrePOp> &aggreg
 
 vector<shared_ptr<PhysicalOp>>
 PrePToPTransformer::transformGroup(const shared_ptr<GroupPrePOp> &groupPrePOp) {
-  vector<shared_ptr<PhysicalOp>> transRes;
   if (USE_TWO_PHASE_GROUP_BY) {
-    transRes = transformGroupTwoPhase(groupPrePOp);
+    return transformGroupTwoPhase(groupPrePOp);
   } else {
-    transRes = transformGroupOnePhase(groupPrePOp);
+    return transformGroupOnePhase(groupPrePOp);
   }
-
-#if SHOW_DEBUG_METRICS == true
-  // update ops to collect predicate transfer baseline metrics
-  if (type_ == PrePToPTransformerType::REGULAR) {
-    auto optPrePOpId = prephysical::Util::traceScanOriginWithNoJoinInPath(groupPrePOp);
-    if (optPrePOpId.has_value()) {
-      // remove flag for former ops
-      auto transResIt = prePOpIdToConnOpsForPredTrans_.find(*optPrePOpId);
-      if (transResIt != prePOpIdToConnOpsForPredTrans_.end()) {
-        for (const auto &op: transResIt->second) {
-          op->unsetCollPredTransMetrics();
-        }
-      }
-
-      // set flag for latter ops
-      for (const auto &op: transRes) {
-        op->setCollPredTransMetrics(*optPrePOpId, metrics::PredTransMetrics::PTMetricsUnitType::LOCAL_FILTER);
-        // classify ops into pred-trans phase since they are applied to base tables
-        op->setInPredTransPhase(true);
-      }
-    }
-  }
-#endif
-
-  return transRes;
 }
 
 vector<shared_ptr<PhysicalOp>>
@@ -765,11 +712,9 @@ PrePToPTransformer::transformHashJoin(const shared_ptr<HashJoinPrePOp> &hashJoin
   PrePToPTransformerUtil::addPhysicalOps(allPOps, physicalOps_);
   allPOps.clear();
 
-  // check if using bloom filter, note:
-  //  - bloom filter is not needed after predicate transfer
-  //  - bloom filter cannot be used for right joins
-  bool useBloomFilter = USE_BLOOM_FILTER && !fpdb::plan::ENABLE_PRED_TRANS
-                        && joinType != JoinType::RIGHT && joinType != JoinType::FULL;
+  // check if using bloom filter, note bloom filter cannot be used for right joins
+  bool useBloomFilter = USE_BLOOM_FILTER &&
+                        (joinType == JoinType::INNER || joinType == JoinType::LEFT || joinType == JoinType::SEMI);
 
   // if using bloom filter
   if (useBloomFilter) {
@@ -883,39 +828,22 @@ PrePToPTransformer::transformHashJoin(const shared_ptr<HashJoinPrePOp> &hashJoin
       }
     } else {
       // we cannot push down bloom filter
-
-#if SHOW_DEBUG_METRICS == true
-      // check if the join is between two base tables, i.e. neither input is not a joined table
-      auto optScanPrePOpId = fpdb::plan::prephysical::Util::traceScanOriginWithNoJoinInPath(
-              hashJoinPrePOp->getProducers()[1]);
-#endif
-      
       // BloomFilterUsePOp
       for (int i = 0; i < parallelDegree_ * numNodes_; ++i) {
-        auto bloomFilterUsePOp = make_shared<bloomfilter::BloomFilterUsePOp>(
+        bloomFilterUsePOps.emplace_back(make_shared<bloomfilter::BloomFilterUsePOp>(
                 fmt::format("BloomFilterUse[{}]-{}-{}", prePOpId, hashJoinPredicateStr, i),
                 upRightConnPOps[0]->getProjectColumnNames(),
                 joinProbePOps[i]->getNodeId(),
-                rightColumnNames);
-        bloomFilterUsePOps.emplace_back(bloomFilterUsePOp);
-
-        // connect bloom filter create to bloom filter use
-        static_pointer_cast<bloomfilter::BloomFilterCreatePOp>(bloomFilterCreatePOps[i])
-                ->addBloomFilterUsePOp(bloomFilterUsePOp);
-        bloomFilterUsePOp->consume(bloomFilterCreatePOps[i]);
-
-#if SHOW_DEBUG_METRICS == true
-        // collect predicate transfer metrics
-        if (optScanPrePOpId.has_value()) {
-          bloomFilterUsePOp->setCollPredTransMetrics(*optScanPrePOpId,
-                                                     metrics::PredTransMetrics::PTMetricsUnitType::BLOOM_FILTER);
-          // classify ops into pred-trans phase since they are applied to base tables
-          bloomFilterCreatePOps[i]->setInPredTransPhase(true);
-          bloomFilterUsePOp->setInPredTransPhase(true);
-        }
-#endif
+                rightColumnNames));
       }
       allPOps.insert(allPOps.end(), bloomFilterUsePOps.begin(), bloomFilterUsePOps.end());
+
+      // connect bloom filter create to bloom filter use
+      for (int i = 0; i < parallelDegree_ * numNodes_; ++i) {
+        static_pointer_cast<bloomfilter::BloomFilterCreatePOp>(bloomFilterCreatePOps[i])
+                ->addBloomFilterUsePOp(bloomFilterUsePOps[i]);
+        bloomFilterUsePOps[i]->consume(bloomFilterCreatePOps[i]);
+      }
 
       // connect bloom filter use to upstream and downstream (joinProbePOps)
       if (rightWithHashJoinPushdown && rightShufflePushed) {
@@ -1075,26 +1003,19 @@ PrePToPTransformer::transformNestedLoopJoin(const shared_ptr<NestedLoopJoinPrePO
 }
 
 vector<shared_ptr<PhysicalOp>>
-PrePToPTransformer::transformFilterableScan(const shared_ptr<FilterableScanPrePOp> &filterableScanPrePOp) {
-  if (catalogueEntry_->getType() != CatalogueEntryType::OBJ_STORE) {
-    throw std::runtime_error(fmt::format("Unsupported catalogue entry type for filterable scan prephysical operator "
-                                         "during predicate transfer: {}", catalogueEntry_->getTypeName()));
+PrePToPTransformer::transformFilterableScan(const shared_ptr<FilterableScanPrePOp> &) {
+  switch (catalogueEntry_->getType()) {
+    case CatalogueEntryType::LOCAL_FS: {
+      throw runtime_error(fmt::format("Unsupported catalogue entry type for filterable scan prephysical operator: {}",
+                                      catalogueEntry_->getTypeName()));
+    }
+    case CatalogueEntryType::OBJ_STORE: {
+      throw runtime_error(fmt::format("Filterable scan should be contained by separable super prephysical operator for object store"));
+    }
+    default: {
+      throw runtime_error(fmt::format("Unknown catalogue entry type: {}", catalogueEntry_->getTypeName()));
+    }
   }
-  auto objStoreCatalogueEntry = std::static_pointer_cast<obj_store::ObjStoreCatalogueEntry>(catalogueEntry_);
-  if (objStoreCatalogueEntry->getStoreType() == ObjStoreType::S3) {
-    throw std::runtime_error(fmt::format("Unsupported object store type for filterable scan prephysical operator during"
-                                         " predicate transfer: {}", objStoreCatalogueEntry->getStoreTypeName()));
-  }
-
-  // transfer filterable scan in pullup mode
-  auto fpdbStoreConnector = static_pointer_cast<obj_store::FPDBStoreConnector>(objStoreConnector_);
-  auto separableSuperPrePOp = std::make_shared<SeparableSuperPrePOp>(filterableScanPrePOp->getId(),
-                                                                     filterableScanPrePOp->getRowCount(),
-                                                                     filterableScanPrePOp);
-  auto transformRes = PrePToFPDBStorePTransformer::transform(separableSuperPrePOp, mode_, numNodes_,
-                                                             parallelDegree_, parallelDegree_, fpdbStoreConnector);
-  PrePToPTransformerUtil::addPhysicalOps(transformRes.second, physicalOps_);
-  return transformRes.first;
 }
 
 vector<shared_ptr<PhysicalOp>>
@@ -1280,10 +1201,6 @@ void PrePToPTransformer::batchLoadShuffle(const vector<shared_ptr<PhysicalOp>> &
     // reset consumers of upConnPOp
     opForShuffle->setConsumers(shuffleBatchLoadPOpNames);
   }
-}
-
-void PrePToPTransformer::clear() {
-  physicalOps_.clear();
 }
 
 }

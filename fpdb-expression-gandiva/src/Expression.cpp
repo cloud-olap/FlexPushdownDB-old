@@ -1,7 +1,7 @@
 //
 // Created by matt on 27/4/20.
 //
-#include <optional>
+
 #include <fpdb/expression/gandiva/Expression.h>
 #include <fpdb/expression/gandiva/Add.h>
 #include <fpdb/expression/gandiva/And.h>

@@ -7,7 +7,6 @@
 
 #include <fpdb/executor/physical/PhysicalOp.h>
 #include <fpdb/executor/message/BloomFilterMessage.h>
-#include <fpdb/executor/metrics/PredTransMetrics.h>
 
 namespace fpdb::executor::physical::bloomfilter {
 
@@ -34,10 +33,6 @@ public:
   bool receivedBloomFilter() const;
   void clearProducersExceptBloomFilterCreate();
 
-#if SHOW_DEBUG_METRICS == true
-  int64_t getNumRowsInput() const;
-#endif
-
 private:
   void onStart();
   void onTupleSet(const TupleSetMessage &msg);
@@ -50,10 +45,6 @@ private:
 
   std::optional<std::shared_ptr<TupleSet>> receivedTupleSet_;
   std::optional<std::shared_ptr<BloomFilterBase>> bloomFilter_;
-
-#if SHOW_DEBUG_METRICS == true
-  int64_t numRowsInput_ = 0;
-#endif
 
 // caf inspect
 public:

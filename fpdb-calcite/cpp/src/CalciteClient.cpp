@@ -53,6 +53,7 @@ void CalciteClient::shutdownServer() {
 }
 
 string CalciteClient::planQuery(const string &query, const string &schemaName, bool useHeuristicJoinOrdering) {
+  std::unique_lock lock(mutex_);
   TPlanResult planResult;
   try {
     calciteServerClient_->sql2Plan(planResult, query, schemaName, useHeuristicJoinOrdering);

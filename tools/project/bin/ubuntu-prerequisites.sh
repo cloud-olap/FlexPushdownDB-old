@@ -19,8 +19,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     # Install development requirements
     apt-get install -y \
       build-essential \
-      llvm-13 \
-      clang-14 \
+      clang-12 \
       cmake \
       ninja-build \
       libcurl4-openssl-dev \
@@ -40,5 +39,3 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   fi
 fi
 
-sudo ln -s /usr/bin/clang-14 /usr/bin/clang
-sudo ln -s /usr/bin/clang++-14 /usr/bin/clang++

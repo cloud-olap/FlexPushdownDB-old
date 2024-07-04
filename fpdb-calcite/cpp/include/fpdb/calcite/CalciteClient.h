@@ -8,6 +8,7 @@
 #include <fpdb/calcite/CalciteConfig.h>
 #include <../gen-cpp/CalciteServer.h>
 #include <memory>
+#include <mutex>
 
 using namespace std;
 
@@ -26,6 +27,7 @@ private:
   shared_ptr<CalciteConfig> calciteConfig_;
   shared_ptr<::apache::thrift::transport::TTransport> transport_;
   shared_ptr<CalciteServerClient> calciteServerClient_;
+  std::mutex mutex_;
 };
 
 }

@@ -280,15 +280,6 @@ tl::expected<void, std::string> TupleSet::renameColumns(const std::vector<std::s
   return {};
 }
 
-tl::expected<std::shared_ptr<TupleSet>, std::string>
-TupleSet::renameColumnsWithNewTupleSet(const std::vector<std::string>& columnNames) {
-  auto expTable = table_->RenameColumns(columnNames);
-  if (!expTable.ok()) {
-    return tl::make_unexpected(expTable.status().message());
-  }
-  return make(*expTable);
-}
-
 tl::expected<void, std::string>
 TupleSet::renameColumns(const std::unordered_map<std::string, std::string> &columnRenames) {
   if (valid() && !columnRenames.empty()) {

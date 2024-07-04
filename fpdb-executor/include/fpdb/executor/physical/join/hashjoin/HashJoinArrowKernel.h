@@ -62,7 +62,6 @@ private:
   tl::expected<void, std::string> doFinalizeInput(bool isBuildSide);
   tl::expected<void, std::string> bufferInput(const std::shared_ptr<TupleSet> &tupleSet, bool isBuildSide);
   tl::expected<void, std::string> bufferOutput(const std::shared_ptr<TupleSet> &tupleSet);
-  void getSemiJoinInputRename();
 
   HashJoinPredicate pred_;
   std::set<std::string> neededColumnNames_;
@@ -78,15 +77,6 @@ private:
   std::optional<std::shared_ptr<TupleSet>> outputBuffer_;
   bool buildInputFinalized_ = false;
   bool probeInputFinalized_ = false;
-
-  // rename the columns in the non-project side of semi-join if there are column name conflicts,
-  // currently this is only required in Yannakakis since in regular processing renames are done by project producers
-  static constexpr std::string_view SemiJoinInputRenamePrefix = "[Semi-join-rename] ";
-  struct SemiJoinInputRename {
-    bool needRename_ = false;
-    bool renameBuild_;    // true if need remain build side, false for probe side
-    std::vector<std::string> renames_;
-  } semiJoinInputRename_;
 
 // caf inspect
 public:

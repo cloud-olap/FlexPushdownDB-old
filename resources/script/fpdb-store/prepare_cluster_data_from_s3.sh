@@ -11,7 +11,7 @@ source "$util_func_path"
 popd > /dev/null
 
 # configurable parameters
-data_relative_dirs=("tpch-sf10")
+data_relative_dirs=("tpch-sf50/parquet")
 
 # add node ip to ssh
 for node_ip in "${fpdb_store_ips[@]}"

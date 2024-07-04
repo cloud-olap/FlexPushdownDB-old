@@ -30,8 +30,6 @@ public:
 
   const vector<string> &getLeftColumnNames() const;
   const vector<string> &getRightColumnNames() const;
-  void setLeftColumnNames(const vector<string> &leftColumnNames);
-  void setRightColumnNames(const vector<string> &rightColumnNames);
 
   string toString() const;
 

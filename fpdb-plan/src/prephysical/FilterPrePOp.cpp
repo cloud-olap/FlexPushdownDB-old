@@ -6,10 +6,8 @@
 
 namespace fpdb::plan::prephysical {
 
-FilterPrePOp::FilterPrePOp(uint id,
-                           double rowCount,
-                           const shared_ptr<fpdb::expression::gandiva::Expression> &predicate) :
-  PrePhysicalOp(id, FILTER, rowCount),
+FilterPrePOp::FilterPrePOp(uint id, const shared_ptr<fpdb::expression::gandiva::Expression> &predicate) :
+  PrePhysicalOp(id, FILTER),
   predicate_(predicate) {}
 
 string FilterPrePOp::getTypeString() {

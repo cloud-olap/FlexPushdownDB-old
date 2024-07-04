@@ -2,8 +2,6 @@
 // Created by Yifei Yang on 4/10/22.
 //
 
-#include <optional>
-#include <mutex>
 #include <fpdb/store/server/flight/BitmapCache.hpp>
 #include <fmt/format.h>
 

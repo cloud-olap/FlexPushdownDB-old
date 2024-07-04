@@ -145,30 +145,5 @@ void PhysicalOp::setSeparated(bool isSeparated) {
   isSeparated_ = isSeparated;
 }
 
-#if SHOW_DEBUG_METRICS == true
-const metrics::PredTransMetrics::PTMetricsInfo &PhysicalOp::getPTMetricsInfo() const {
-  return ptMetricsInfo_;
-}
-
-bool PhysicalOp::inPredTransPhase() const {
-  return inPredTransPhase_;
-}
-
-void PhysicalOp::setCollPredTransMetrics(uint prePOpId,
-                                         metrics::PredTransMetrics::PTMetricsUnitType ptMetricsType) {
-  ptMetricsInfo_.collPredTransMetrics_ = true;
-  ptMetricsInfo_.prePOpId_ = prePOpId;
-  ptMetricsInfo_.ptMetricsType_ = ptMetricsType;
-}
-
-void PhysicalOp::unsetCollPredTransMetrics() {
-  ptMetricsInfo_.collPredTransMetrics_ = false;
-}
-
-void PhysicalOp::setInPredTransPhase(bool inPredTransPhase) {
-  inPredTransPhase_ = inPredTransPhase;
-}
-#endif
-
 } // namespace
 

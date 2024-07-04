@@ -13,7 +13,6 @@ namespace fpdb::plan::prephysical {
 class AggregatePrePOp: public PrePhysicalOp {
 public:
   AggregatePrePOp(uint id,
-                  double rowCount,
                   const vector<string> &aggOutputColumnNames,
                   const vector<shared_ptr<AggregatePrePFunction>> &functions);
 

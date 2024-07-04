@@ -20,8 +20,8 @@ if [ "$(uname)" = "Darwin" ]; then
   CXX_compiler="/usr/local/opt/llvm@13/bin/clang++"
 elif [ "$(expr substr "$(uname -s)" 1 5)" == "Linux" ]; then
   # linux
-  C_compiler="/usr/bin/clang-14"
-  CXX_compiler="/usr/bin/clang++-14"
+  C_compiler="/usr/bin/clang-12"
+  CXX_compiler="/usr/bin/clang++-12"
 else
   echo "*** Error: supported OS are Mac OS or Linux."
   exit 0
@@ -33,8 +33,8 @@ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER="${C_compiler}" -DCMAKE_CXX_
 
 # use exec.conf.ec2 for calcite
 calcite_config_dir="$root_dir"/"$calcite_dir_name""/main/resources/config"
-# mv "$calcite_config_dir""/exec.conf" "$calcite_config_dir""/exec.conf.backup"
-# cp "$calcite_config_dir""/exec.conf.ec2" "$calcite_config_dir""/exec.conf"
+mv "$calcite_config_dir""/exec.conf" "$calcite_config_dir""/exec.conf.backup"
+cp "$calcite_config_dir""/exec.conf.ec2" "$calcite_config_dir""/exec.conf"
 
 # build targets
 targets=("${compute_targets[@]}" "${fpdb_store_targets[@]}")
@@ -44,7 +44,7 @@ do
 done
 
 # restore exec.conf
-# rm "$calcite_config_dir""/exec.conf"
-# mv "$calcite_config_dir""/exec.conf.backup" "$calcite_config_dir""/exec.conf"
+rm "$calcite_config_dir""/exec.conf"
+mv "$calcite_config_dir""/exec.conf.backup" "$calcite_config_dir""/exec.conf"
 
 popd > /dev/null

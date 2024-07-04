@@ -8,10 +8,9 @@
 namespace fpdb::plan::prephysical {
 
 LimitSortPrePOp::LimitSortPrePOp(uint id,
-                                 double rowCount,
                                  int64_t k,
                                  const vector<SortKey> &sortKeys):
-  PrePhysicalOp(id, LIMIT_SORT, rowCount),
+  PrePhysicalOp(id, LIMIT_SORT),
   k_(k),
   sortKeys_(sortKeys) {}
 

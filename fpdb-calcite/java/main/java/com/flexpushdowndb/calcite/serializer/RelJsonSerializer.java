@@ -6,7 +6,6 @@ import org.apache.calcite.rel.RelNode;
 import org.apache.calcite.rel.core.AggregateCall;
 import org.apache.calcite.rel.core.Join;
 import org.apache.calcite.rel.core.Sort;
-import org.apache.calcite.rel.metadata.RelMetadataQuery;
 import org.apache.calcite.rex.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -69,7 +68,9 @@ public final class RelJsonSerializer {
   }
 
   private JSONObject serializeEnumerableTableScan(EnumerableTableScan scan) {
-    JSONObject jo = serializeCommon(scan);
+    JSONObject jo = new JSONObject();
+    // operator name
+    jo.put("operator", scan.getClass().getSimpleName());
     // schema
     jo.put("schema", scan.getTable().getQualifiedName().get(0));
     // table
@@ -80,7 +81,9 @@ public final class RelJsonSerializer {
   }
 
   private JSONObject serializeEnumerableFilter(EnumerableFilter filter) {
-    JSONObject jo = serializeCommon(filter);
+    JSONObject jo = new JSONObject();
+    // operator name
+    jo.put("operator", filter.getClass().getSimpleName());
     // filter condition
     jo.put("condition", RexJsonSerializer.serialize(filter.getCondition(),
                                                     filter.getRowType().getFieldNames(),
@@ -91,7 +94,9 @@ public final class RelJsonSerializer {
   }
 
   private JSONObject serializeJoin(Join join) {
-    JSONObject jo = serializeCommon(join);
+    JSONObject jo = new JSONObject();
+    // operator name
+    jo.put("operator", join.getClass().getSimpleName());
 
     // join may incur field renames, if left and right inputs have overlapping field names
     List<String> leftFieldNames = join.getInput(0).getRowType().getFieldNames();
@@ -156,7 +161,9 @@ public final class RelJsonSerializer {
   }
 
   private JSONObject serializeEnumerableProject(EnumerableProject project) {
-    JSONObject jo = serializeCommon(project);
+    JSONObject jo = new JSONObject();
+    // operator name
+    jo.put("operator", project.getClass().getSimpleName());
 
     // project fields
     List<String> inputFieldNames = project.getInput().getRowType().getFieldNames();
@@ -178,7 +185,9 @@ public final class RelJsonSerializer {
   }
 
   private JSONObject serializeEnumerableAggregate(EnumerableAggregateBase aggregate) {
-    JSONObject jo = serializeCommon(aggregate);
+    JSONObject jo = new JSONObject();
+    // operator name
+    jo.put("operator", aggregate.getClass().getSimpleName());
 
     // group fields
     List<String> inputFieldNames = aggregate.getInput().getRowType().getFieldNames();
@@ -224,7 +233,9 @@ public final class RelJsonSerializer {
   }
 
   private JSONObject serializeEnumerableSort(EnumerableSort sort) {
-    JSONObject jo = serializeCommon(sort);
+    JSONObject jo = new JSONObject();
+    // operator name
+    jo.put("operator", sort.getClass().getSimpleName());
     // sort fields
     jo.put("sortFields", serializeSortFields(sort));
     // input operators
@@ -233,7 +244,9 @@ public final class RelJsonSerializer {
   }
 
   private JSONObject serializeEnumerableLimitSort(EnumerableLimitSort limitSort) {
-    JSONObject jo = serializeCommon(limitSort);
+    JSONObject jo = new JSONObject();
+    // operator name
+    jo.put("operator", limitSort.getClass().getSimpleName());
     // sort fields
     jo.put("sortFields", serializeSortFields(limitSort));
     // limit
@@ -241,16 +254,6 @@ public final class RelJsonSerializer {
     jo.put("limit", RexJsonSerializer.serialize(limitSort.fetch, null, limitSort.getCluster().getRexBuilder()));
     // input operators
     jo.put("inputs", serializeRelInputs(limitSort));
-    return jo;
-  }
-
-  private JSONObject serializeCommon(RelNode relNode) {
-    JSONObject jo = new JSONObject();
-    // operator name
-    jo.put("operator", relNode.getClass().getSimpleName());
-    // estimated row count, needed by predicate transfer
-    RelMetadataQuery mq = relNode.getCluster().getMetadataQuery();
-    jo.put("rowCount", mq.getRowCount(relNode));
     return jo;
   }
 }

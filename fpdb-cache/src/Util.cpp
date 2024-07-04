@@ -9,6 +9,23 @@
 using namespace fpdb::catalogue::obj_store;
 using namespace fpdb::util;
 
+std::vector<std::string> split(const std::string& str, const std::string& splitStr) {
+  std::vector<std::string> res;
+  std::string::size_type pos1, pos2;
+  pos2 = str.find(splitStr);
+  pos1 = 0;
+  while (pos2 != std::string::npos)
+  {
+    res.push_back(str.substr(pos1, pos2 - pos1));
+    pos1 = pos2 + 1;
+    pos2 = str.find(splitStr, pos1);
+  }
+  if (pos1 < str.length()) {
+    res.push_back(str.substr(pos1));
+  }
+  return res;
+}
+
 namespace fpdb::cache {
 
 unordered_map<shared_ptr<SegmentKey>, size_t, cache::SegmentKeyPointerHash, cache::SegmentKeyPointerPredicate>

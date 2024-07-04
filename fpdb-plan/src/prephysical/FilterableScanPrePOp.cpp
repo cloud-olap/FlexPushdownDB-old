@@ -6,8 +6,8 @@
 
 namespace fpdb::plan::prephysical {
 
-FilterableScanPrePOp::FilterableScanPrePOp(uint id, double rowCount, const shared_ptr<Table> &table) :
-  PrePhysicalOp(id, FILTERABLE_SCAN, rowCount),
+FilterableScanPrePOp::FilterableScanPrePOp(uint id, const shared_ptr<Table> &table) :
+  PrePhysicalOp(id, FILTERABLE_SCAN),
   table_(table) {}
 
 string FilterableScanPrePOp::getTypeString() {

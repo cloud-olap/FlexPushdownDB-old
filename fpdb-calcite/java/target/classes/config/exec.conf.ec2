@@ -1,0 +1,3 @@
+[conf]
+SERVER_PORT=8099
+RESOURCE_PATH=/home/ubuntu/FPDB-build/resources/

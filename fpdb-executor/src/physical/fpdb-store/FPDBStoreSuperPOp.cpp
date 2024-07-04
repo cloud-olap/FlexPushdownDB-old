@@ -5,8 +5,10 @@
 #include <fpdb/executor/physical/fpdb-store/FPDBStoreSuperPOp.h>
 #include <fpdb/executor/physical/filter/FilterPOp.h>
 #include <fpdb/executor/physical/serialization/PhysicalPlanSerializer.h>
+#include <fpdb/executor/physical/serialization/PhysicalPlanDeserializer.h>
 #include <fpdb/executor/physical/Globals.h>
 #include <fpdb/executor/flight/FlightClients.h>
+#include <fpdb/executor/flight/FlightHandler.h>
 #include <fpdb/executor/message/TransferMetricsMessage.h>
 #include <fpdb/executor/message/PushdownFallBackMessage.h>
 #include <fpdb/executor/metrics/Globals.h>
@@ -15,6 +17,8 @@
 #include <fpdb/store/server/flight/SelectObjectContentTicket.hpp>
 #include <fpdb/store/server/flight/GetTableTicket.hpp>
 #include <fpdb/store/server/flight/ClearBitmapCmd.hpp>
+#include <fpdb/store/server/flight/ClearTableCmd.hpp>
+#include <fpdb/store/server/flight/adaptive/PushbackCompleteCmd.hpp>
 #include <fpdb/store/server/flight/Util.hpp>
 #include <fpdb/util/Util.h>
 #include <arrow/flight/api.h>
@@ -38,6 +42,19 @@ FPDBStoreSuperPOp::FPDBStoreSuperPOp(const std::string &name,
   host_(host),
   fileServicePort_(fileServicePort),
   flightPort_(flightPort) {}
+
+FPDBStoreSuperPOp::~FPDBStoreSuperPOp() {
+  // wait pushback double-exec if enabled before destruction
+  if (EnablePushbackTailReqDoubleExec) {
+    OpsWithPushbackExec.erase(makePushbackDoubleExecKey(queryId_, name_));
+    if (doubleExecCv_ != nullptr) {
+      std::unique_lock lock(*doubleExecMutex_);
+      doubleExecCv_->wait(lock, [&] {
+        return isDoubleExecFinished_;
+      });
+    }
+  }
+}
 
 void FPDBStoreSuperPOp::onReceive(const Envelope &envelope) {
   const auto &message = envelope.message();
@@ -278,7 +295,14 @@ bool FPDBStoreSuperPOp::readyToProcess() {
   return true;
 }
 
-void FPDBStoreSuperPOp::processAtStore() {
+void FPDBStoreSuperPOp::processAtStore(bool isDoubleExec) {
+  // create double-exec mutex if not yet
+  if (EnablePushbackTailReqDoubleExec) {
+    if (doubleExecMutex_ == nullptr) {
+      doubleExecMutex_ = std::make_shared<std::mutex>();
+    }
+  }
+
   // for limiting number of concurrent detached FPDBStoreSuperPOp
   if (ENABLE_FILTER_BITMAP_PUSHDOWN) {
     processDetachIn();
@@ -293,7 +317,12 @@ void FPDBStoreSuperPOp::processAtStore() {
     onErrorDuringProcess(expPlanString.error());
     return;
   }
-  auto ticketObj = SelectObjectContentTicket::make(queryId_, name_, *expPlanString, parallelDegree_);
+
+  const auto &flightDaemonServer = executor::flight::FlightHandler::daemonServer_;
+  auto ticketObj = SelectObjectContentTicket::make(queryId_, name_, *expPlanString, parallelDegree_,
+          flightDaemonServer != nullptr ?
+              ReqExtraInfo(isDoubleExec, flightDaemonServer->getHost(), flightDaemonServer->getPort()):
+              ReqExtraInfo());
   auto expTicket = ticketObj->to_ticket(false);
   if (!expTicket.has_value()) {
     onErrorDuringProcess(expTicket.error());
@@ -301,6 +330,7 @@ void FPDBStoreSuperPOp::processAtStore() {
   }
 
   // if pushdown result should be received by consumers in pipeline, let them start waiting now
+  // currently only true when hashjoin pushdown is enabled
   if (receiveByOthers_) {
     std::shared_ptr<Message> tupleSetWaitRemoteMessage =
             std::make_shared<TupleSetWaitRemoteMessage>(host_, flightPort_, name_);
@@ -320,9 +350,37 @@ void FPDBStoreSuperPOp::processAtStore() {
         return;
       }
       // fall back to pullup (adaptive pushdown)
-      processAsPullup();
+      bool isResultNeeded;
+      processAsPullup(&isResultNeeded);
+      // if using adapt pushdown manager v2 or v3, signal the storage that pushback has completed
+      if (AdaptPushdownManagerV == AdaptPushdownManagerVersion::V2 ||
+          AdaptPushdownManagerV == AdaptPushdownManagerVersion::V3) {
+        // send request to store
+        auto cmdObj = PushbackCompleteCmd::make(queryId_, name_);
+        auto expCmd = cmdObj->serialize(false);
+        if (!expCmd.has_value()) {
+          ctx()->notifyError(expCmd.error());
+          return;
+        }
+        auto descriptor = ::arrow::flight::FlightDescriptor::Command(*expCmd);
+        std::unique_ptr<arrow::flight::FlightStreamWriter> writer;
+        std::unique_ptr<arrow::flight::FlightMetadataReader> metadataReader;
+        status = client->DoPut(descriptor, nullptr, &writer, &metadataReader);
+        if (!status.ok()) {
+          ctx()->notifyError(status.message());
+          return;
+        }
+        status = writer->Close();
+        if (!status.ok()) {
+          ctx()->notifyError(status.message());
+          return;
+        }
+      }
+
       // complete and return
-      ctx()->notifyComplete();
+      if (isResultNeeded) {
+        ctx()->notifyComplete();
+      }
       if (ENABLE_FILTER_BITMAP_PUSHDOWN) {
         processDetachOut();
       }
@@ -359,44 +417,91 @@ void FPDBStoreSuperPOp::processAtStore() {
     ctx()->notifyRoot(adaptPushdownMetricsMessage);
   }
 
+  // ignore the slower output if enabling double-exec
+  bool isResultNeeded = true;
+  if (EnablePushbackTailReqDoubleExec) {
+    std::unique_lock lock(*doubleExecMutex_);
+    if (isOneExecFinished_) {
+      isResultNeeded = false;
+    }
+    isOneExecFinished_ = true;
+  }
+
   // if pushdown result hasn't been waiting by consumers
-  if (!receiveByOthers_) {
-    // if not having shuffle op, do regularly
-    if (!shufflePOpName_.has_value()) {
-      // check table
-      if (table == nullptr) {
-        onErrorDuringProcess("Received null table from FPDB-Store");
-        return;
-      }
+  if (isResultNeeded) {
+    if (!receiveByOthers_) {
+      // if not having shuffle op, do regularly
+      if (!shufflePOpName_.has_value()) {
+        // check table
+        if (table == nullptr) {
+          onErrorDuringProcess("Received null table from FPDB-Store");
+          return;
+        }
 
-      // send output tupleSet
-      std::shared_ptr<TupleSet> tupleSet;
-      if (table->num_rows() > 0) {
-        tupleSet = TupleSet::make(table);
-      } else {
-        tupleSet = TupleSet::make(table->schema());
-      }
-      std::shared_ptr<Message> tupleSetMessage = std::make_shared<TupleSetMessage>(tupleSet, name_);
-      ctx()->tell(tupleSetMessage);
+        // send output tupleSet
+        std::shared_ptr<TupleSet> tupleSet;
+        if (table->num_rows() > 0) {
+          tupleSet = TupleSet::make(table);
+        } else {
+          tupleSet = TupleSet::make(table->schema());
+        }
+        std::shared_ptr<Message> tupleSetMessage = std::make_shared<TupleSetMessage>(tupleSet, name_);
+        ctx()->tell(tupleSetMessage);
 
-      // metrics
+        // metrics
 #if SHOW_DEBUG_METRICS == true
-      std::shared_ptr<Message> execMetricsMsg =
-              std::make_shared<TransferMetricsMessage>(metrics::TransferMetrics(tupleSet->size(), 0, 0), this->name());
-      ctx()->notifyRoot(execMetricsMsg);
+        std::shared_ptr<Message> execMetricsMsg =
+                std::make_shared<TransferMetricsMessage>(metrics::TransferMetrics(tupleSet->size(), 0, 0),
+                                                         this->name());
+        ctx()->notifyRoot(execMetricsMsg);
 #endif
+      }
+
+      // if having shuffle op
+      else {
+        std::shared_ptr<Message> tupleSetReadyRemoteMessage =
+                std::make_shared<TupleSetReadyRemoteMessage>(host_, flightPort_, true, name_);
+        ctx()->tell(tupleSetReadyRemoteMessage);
+      }
     }
 
-    // if having shuffle op
-    else {
-      std::shared_ptr<Message> tupleSetReadyRemoteMessage =
-              std::make_shared<TupleSetReadyRemoteMessage>(host_, flightPort_, true, name_);
-      ctx()->tell(tupleSetReadyRemoteMessage);
+    // complete
+    ctx()->notifyComplete();
+  } else {
+    // clear shuffled tables at storage if not to be fetched
+    if (shufflePOpName_.has_value()) {
+      // send request to store
+      for (const auto& consumer: consumers_) {
+        // send request to store
+        auto cmdObj = ClearTableCmd::make(queryId_, name_, consumer);
+        auto expCmd = cmdObj->serialize(false);
+        if (!expCmd.has_value()) {
+          ctx()->notifyError(expCmd.error());
+          return;
+        }
+        auto descriptor = ::arrow::flight::FlightDescriptor::Command(*expCmd);
+        std::unique_ptr<arrow::flight::FlightStreamWriter> writer;
+        std::unique_ptr<arrow::flight::FlightMetadataReader> metadataReader;
+        status = client->DoPut(descriptor, nullptr, &writer, &metadataReader);
+        if (!status.ok()) {
+          ctx()->notifyError(status.message());
+          return;
+        }
+        status = writer->Close();
+        if (!status.ok()) {
+          ctx()->notifyError(status.message());
+          return;
+        }
+      }
     }
   }
 
-  // complete
-  ctx()->notifyComplete();
+  // mark double-exec has finished
+  if (EnablePushbackTailReqDoubleExec && isDoubleExec) {
+    std::unique_lock lock(*doubleExecMutex_);
+    isDoubleExecFinished_ = true;
+    doubleExecCv_->notify_one();
+  }
 
   // for limiting number of concurrent detached FPDBStoreSuperPOp
   if (ENABLE_FILTER_BITMAP_PUSHDOWN) {
@@ -450,9 +555,23 @@ void FPDBStoreSuperPOp::processEmpty() {
   ctx()->notifyComplete();
 }
 
-void FPDBStoreSuperPOp::processAsPullup() {
-  // update "subPlan_", by changing FPDBFileScanPOp to RemoteFileScanPOp
-  auto res = subPlan_->fallBackToPullup(host_, fileServicePort_);
+void FPDBStoreSuperPOp::processAsPullup(bool* isResultNeeded) {
+  // prepare for pushback double-exec if enabled
+  if (EnablePushbackTailReqDoubleExec) {
+    std::unique_lock lock(PushbackExecMutex);
+    OpsWithPushbackExec[makePushbackDoubleExecKey(queryId_, name_)] = this;
+  }
+
+  // get pushback sub-query plan, by changing FPDBFileScanPOp to RemoteFileScanPOp
+  // create a "deep" copy of original plan first, by deserialized result
+  // FIXME: a better approach is probably to make use of caf's inspect (serialize) mechanism, currently unsure how
+  auto expPushbackSubPlan = PhysicalPlanDeserializer::deserialize(*subPlanStr_, "" /*unused*/);
+  if (!expPushbackSubPlan.has_value()) {
+    ctx()->notifyError(expPushbackSubPlan.error());
+    return;
+  }
+  auto pushbackSubPlan = *expPushbackSubPlan;
+  auto res = pushbackSubPlan->fallBackToPullup(host_, fileServicePort_);
   if (!res.has_value()) {
     ctx()->notifyError(res.error());
     return;
@@ -460,7 +579,7 @@ void FPDBStoreSuperPOp::processAsPullup() {
 
   // execute subPlan
   auto execution = std::make_shared<FPDBStoreExecution>(
-          queryId_, caf::CAFAdaptPushdownUtil::daemonAdaptPushdownActorSystem_, subPlan_,
+          queryId_, caf::CAFAdaptPushdownUtil::daemonAdaptPushdownActorSystem_, pushbackSubPlan,
           [&] (const std::string &consumer, const std::shared_ptr<arrow::Table> &table) {
             std::shared_ptr<Message> tupleSetMessage = std::make_shared<TupleSetMessage>(TupleSet::make(table), name_);
             ctx()->send(tupleSetMessage, consumer);
@@ -469,25 +588,45 @@ void FPDBStoreSuperPOp::processAsPullup() {
             // noop
           });
   auto tupleSet = execution->execute();
-  if (tupleSet == nullptr || tupleSet->table() == nullptr) {
-    ctx()->notifyError("Received null table from fallback to pullup execution");
-    return;
-  }
-  if (tupleSet->numRows() != 0 || tupleSet->numColumns() != 0) {
-    std::shared_ptr<Message> tupleSetMessage = std::make_shared<TupleSetMessage>(tupleSet, name_);
-    ctx()->tell(tupleSetMessage);
+
+  // ignore the slower output if enabling double-exec
+  *isResultNeeded = true;
+  if (EnablePushbackTailReqDoubleExec) {
+    std::unique_lock lock(*doubleExecMutex_);
+    if (isOneExecFinished_) {
+      *isResultNeeded = false;
+    }
+    isOneExecFinished_ = true;
   }
 
-  // metrics
+  if (*isResultNeeded) {
+    if (tupleSet == nullptr || tupleSet->table() == nullptr) {
+      ctx()->notifyError("Received null table from fallback to pullup execution");
+      return;
+    }
+    if (tupleSet->numRows() != 0 || tupleSet->numColumns() != 0) {
+      std::shared_ptr<Message> tupleSetMessage = std::make_shared<TupleSetMessage>(tupleSet, name_);
+      ctx()->tell(tupleSetMessage);
+    }
+
+    // metrics
 #if SHOW_DEBUG_METRICS == true
-  std::shared_ptr<Message> execMetricsMsg =
-          std::make_shared<TransferMetricsMessage>(execution->getDebugMetrics().getTransferMetrics(), name_);
-  ctx()->notifyRoot(execMetricsMsg);
-  std::shared_ptr<Message> pushdownFallBackMsg = std::make_shared<PushdownFallBackMessage>(name_);
-  ctx()->notifyRoot(pushdownFallBackMsg);
+    std::shared_ptr<Message> execMetricsMsg =
+            std::make_shared<TransferMetricsMessage>(execution->getDebugMetrics().getTransferMetrics(), name_);
+    ctx()->notifyRoot(execMetricsMsg);
+    std::shared_ptr<Message> pushdownFallBackMsg = std::make_shared<PushdownFallBackMessage>(name_);
+    ctx()->notifyRoot(pushdownFallBackMsg);
 #endif
+  }
 
   // clear unused bloom filters at storage side, due to we fall back to pullup
+  // only do when double-exec does not occur
+  if (EnablePushbackTailReqDoubleExec) {
+    std::unique_lock lock(*doubleExecMutex_);
+    if (doubleExecCv_ != nullptr) {
+      return;
+    }
+  }
   std::unordered_set<std::string> bloomFilterKeys;
   std::vector<std::shared_ptr<ClearBitmapCmd>> clearBitmapCmds;
   for (const auto &opIt: subPlan_->getPhysicalOps()) {
@@ -535,7 +674,17 @@ void FPDBStoreSuperPOp::onErrorDuringProcess(const std::string &error) {
 }
 
 tl::expected<std::string, std::string> FPDBStoreSuperPOp::serialize(bool pretty) {
-  return PhysicalPlanSerializer::serialize(subPlan_, pretty);
+  auto expSubPlanStr = PhysicalPlanSerializer::serialize(subPlan_, pretty);
+  if (expSubPlanStr.has_value()) {
+    subPlanStr_ = *expSubPlanStr;
+  }
+  return expSubPlanStr;
+}
+
+void FPDBStoreSuperPOp::pushback_double_exec() {
+  // start pushdown exec in another thread
+  std::thread th(&FPDBStoreSuperPOp::processAtStore, this, true);
+  th.detach();
 }
 
 void FPDBStoreSuperPOp::clear() {

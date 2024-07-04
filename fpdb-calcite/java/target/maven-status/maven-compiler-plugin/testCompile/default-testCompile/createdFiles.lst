@@ -1,0 +1,5 @@
+com/flexpushdowndb/calcite/TPCHTest.class
+com/flexpushdowndb/calcite/TestCalcite.class
+com/flexpushdowndb/calcite/SSBTest.class
+com/flexpushdowndb/calcite/MultiQueryTest.class
+com/flexpushdowndb/calcite/TestUtil.class

@@ -8,11 +8,9 @@
 #include <fpdb/executor/physical/Forward.h>
 #include <fpdb/executor/physical/POpContext.h>
 #include <fpdb/executor/physical/POpType.h>
-#include <fpdb/executor/physical/fpdb-store/FPDBStoreBloomFilterInfo.h>
 #include <fpdb/executor/message/Message.h>
 #include <fpdb/executor/message/Envelope.h>
-#include <fpdb/executor/metrics/Globals.h>
-#include <fpdb/executor/metrics/PredTransMetrics.h>
+#include <fpdb/executor/physical/fpdb-store/FPDBStoreBloomFilterInfo.h>
 #include <caf/all.hpp>
 #include <string>
 #include <memory>
@@ -72,14 +70,6 @@ public:
   bool isSeparated() const;
   void setSeparated(bool isSeparated);
 
-#if SHOW_DEBUG_METRICS == true
-  const metrics::PredTransMetrics::PTMetricsInfo &getPTMetricsInfo() const;
-  bool inPredTransPhase() const;
-  void setCollPredTransMetrics(uint prePOpId, metrics::PredTransMetrics::PTMetricsUnitType ptMetricsType);
-  void unsetCollPredTransMetrics();
-  void setInPredTransPhase(bool inPredTransPhase);
-#endif
-
   virtual void onReceive(const fpdb::executor::message::Envelope &msg) = 0;
   virtual void clear() = 0;
   void destroyActor();
@@ -101,10 +91,6 @@ protected:
   // whether this operator is used in hybrid execution
   bool isSeparated_;
 
-#if SHOW_DEBUG_METRICS == true
-  metrics::PredTransMetrics::PTMetricsInfo ptMetricsInfo_;
-  bool inPredTransPhase_ = false;     // whether this operator is classified as pred-trans phase or exec phase
-#endif
 };
 
 } // namespace

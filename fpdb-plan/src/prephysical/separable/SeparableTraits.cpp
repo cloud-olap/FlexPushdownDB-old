@@ -3,7 +3,7 @@
 //
 
 #include <fpdb/plan/prephysical/separable/SeparableTraits.h>
-#include <fpdb/plan/Globals.h>
+#include "fpdb/plan/prephysical/separable/Globals.h"
 
 namespace fpdb::plan::prephysical::separable {
 

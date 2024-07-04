@@ -15,9 +15,13 @@ enum class CmdTypeId {
   SELECT_OBJECT_CONTENT,
   PUT_BITMAP,
   CLEAR_BITMAP,
+  CLEAR_TABLE,
   PUT_ADAPT_PUSHDOWN_METRICS,
   CLEAR_ADAPT_PUSHDOWN_METRICS,
-  SET_ADAPT_PUSHDOWN
+  SET_ADAPT_PUSHDOWN,
+  PUSHBACK_COMPLETE,
+  PUSHBACK_DOUBLE_EXEC,
+  SET_NUM_REQ_TO_TAIL
 };
 
 class CmdType {
@@ -36,11 +40,19 @@ public:
 
   static std::shared_ptr<CmdType> clear_bitmap();
 
+  static std::shared_ptr<CmdType> clear_table();
+
   static std::shared_ptr<CmdType> put_adapt_pushdown_metrics();
 
   static std::shared_ptr<CmdType> clear_adapt_pushdown_metrics();
 
   static std::shared_ptr<CmdType> set_adapt_pushdown();
+
+  static std::shared_ptr<CmdType> pushback_complete();
+
+  static std::shared_ptr<CmdType> pushback_double_exec();
+
+  static std::shared_ptr<CmdType> set_num_req_to_tail();
 
 private:
   CmdTypeId id_;

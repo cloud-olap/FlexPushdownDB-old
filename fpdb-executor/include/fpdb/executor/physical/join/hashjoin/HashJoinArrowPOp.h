@@ -7,7 +7,6 @@
 
 #include <fpdb/executor/physical/PhysicalOp.h>
 #include <fpdb/executor/physical/join/hashjoin/HashJoinArrowKernel.h>
-#include <fpdb/executor/metrics/Globals.h>
 
 namespace fpdb::executor::physical::join {
 
@@ -42,11 +41,6 @@ public:
   void clearBuildProducers();
   void clearProbeProducers();
 
-#if SHOW_DEBUG_METRICS == true
-  int64_t getNumRowsBuild() const;
-  int64_t getNumRowsProbe() const;
-#endif
-
 private:
   void onStart();
   void onComplete(const CompleteMessage &message);
@@ -61,11 +55,6 @@ private:
   bool sentResult = false;
   int numCompletedBuildProducers_ = 0;
   int numCompletedProbeProducers_ = 0;
-
-#if SHOW_DEBUG_METRICS == true
-  int64_t numRowsBuild_ = 0;
-  int64_t numRowsProbe_ = 0;
-#endif
 
 // caf inspect
 public:

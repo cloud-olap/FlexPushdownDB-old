@@ -2,18 +2,16 @@
 
 -----------------
 
-A research cloud OLAP query engine.
+A research cloud OLAP engine using hybrid caching and computation pushdown.
 
-[1] Yifei Yang, Matt Youill, Matthew Woicik, Yizhou Liu, Xiangyao Yu, Marco Serafini, Ashraf Aboulnaga, Michael Stonebraker, [FlexPushdownDB: Hybrid Pushdown and Caching in a Cloud DBMS](https://dl.acm.org/doi/abs/10.14778/3476249.3476265), VLDB 2021.
-
-[2] Yifei Yang, Hangdong Zhao, Xiangyao Yu, Paraschos Koutris, [Predicate Transfer: Efficient Pre-Filtering on Multi-Join Queries](https://www.cidrdb.org/cidr2024/papers/p22-yang.pdf), CIDR 2024.
+[1] Yifei Yang, Matt Youill, Matthew Woicik, Yizhou Liu, Xiangyao Yu, Marco Serafini, Ashraf Aboulnaga, Michael Stonebraker, FlexPushdownDB: Hybrid Pushdown and Caching in a Cloud DBMS, VLDB 2021.
 
 
 ## Clone the Repo
 
 ```
-git clone https://github.com/cloud-olap/FlexPushdownDB.git
-cd FlexPushdownDB
+git clone https://github.com/cloud-olap/FlexPushdownDB-Dev.git
+cd FlexPushdownDB-Dev
 ```
 
 
@@ -103,3 +101,12 @@ Compiler needed:
 - `SERVER_PORT` port for the Calcite server, should be kept same as cpp side.
 - `RESOURCE_PATH` absolute path of `resources/` used for metadata fetching.
 - `exec.conf.ec2` is a fixed config for EC2 deployment and does not need to be changed.
+
+
+## To Do
+### Refactoring
+- Use a single flight client instead of creating one for each request
+- Check if file readers are too slow?
+  - Use all SSD drives?
+  - Use threads in Arrow readers?
+  

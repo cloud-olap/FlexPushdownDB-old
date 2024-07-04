@@ -8,6 +8,7 @@
 
 #include <fpdb/executor/Executor.h>
 #include <fpdb/executor/Execution.h>
+#include <fpdb/executor/Globals.h>
 #include <fpdb/executor/CollAdaptPushdownMetricsExecution.h>
 #include <fpdb/executor/cache/SegmentCacheActor.h>
 #include <fpdb/cache/caf-serialization/CAFCachingPolicySerializer.h>
@@ -26,7 +27,6 @@ Executor::Executor(const shared_ptr<::caf::actor_system> &actorSystem,
   nodes_(nodes),
   cachingPolicy_(cachingPolicy),
   mode_(mode),
-  queryCounter_(0),
   running_(false),
   showOpTimes_(showOpTimes),
   showScanMetrics_(showScanMetrics) {}
@@ -85,12 +85,13 @@ void Executor::stop() {
 }
 
 pair<shared_ptr<TupleSet>, long> Executor::execute(
+        long queryId,
         const shared_ptr<PhysicalPlan> &physicalPlan,
         bool isDistributed,
         bool collAdaptPushdownMetrics,
         const std::shared_ptr<fpdb::catalogue::obj_store::FPDBStoreConnector> &fpdbStoreConnector) {
   const auto &execution = collAdaptPushdownMetrics ?
-                          make_shared<CollAdaptPushdownMetricsExecution>(nextQueryId(),
+                          make_shared<CollAdaptPushdownMetricsExecution>(queryId,
                                                                          actorSystem_,
                                                                          nodes_,
                                                                          localSegmentCacheActor_,
@@ -98,7 +99,7 @@ pair<shared_ptr<TupleSet>, long> Executor::execute(
                                                                          physicalPlan,
                                                                          isDistributed,
                                                                          fpdbStoreConnector) :
-                          make_shared<Execution>(nextQueryId(),
+                          make_shared<Execution>(queryId,
                                                  actorSystem_,
                                                  nodes_,
                                                  localSegmentCacheActor_,
@@ -108,14 +109,13 @@ pair<shared_ptr<TupleSet>, long> Executor::execute(
   const auto &result = execution->execute();
   long elapsedTime = execution->getElapsedTime();
 
+  std::unique_lock lock(ConcurrentOutputMutex);
   // metrics, FIXME: better organize all metrics
   if (showOpTimes_ || showScanMetrics_) {
     cout << execution->showMetrics(showOpTimes_, showScanMetrics_) << endl;
   }
 #if SHOW_DEBUG_METRICS == true
-  if (metrics::hasMetricsToShow()) {
-    cout << execution->showDebugMetrics() << endl;
-  }
+  cout << execution->showDebugMetrics() << endl;
 #endif
 
   return make_pair(result, elapsedTime);
@@ -143,10 +143,6 @@ const shared_ptr<::caf::actor_system> &Executor::getActorSystem() const {
 
 bool Executor::isCacheUsed() {
   return cachingPolicy_ != nullptr;
-}
-
-long Executor::nextQueryId() {
-  return queryCounter_.fetch_add(1);
 }
 
 std::string Executor::showCacheMetrics() {

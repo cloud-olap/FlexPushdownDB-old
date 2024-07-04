@@ -19,7 +19,6 @@ add_library(fpdb-executor STATIC
         src/message/TupleSetSizeMessage.cpp include/fpdb/executor/message/TupleSetSizeMessage.h
         src/message/TransferMetricsMessage.cpp include/fpdb/executor/message/TransferMetricsMessage.h
         src/message/DiskMetricsMessage.cpp include/fpdb/executor/message/DiskMetricsMessage.h
-        src/message/PredTransMetricsMessage.cpp include/fpdb/executor/message/PredTransMetricsMessage.h
         src/message/ErrorMessage.cpp include/fpdb/executor/message/ErrorMessage.h
         src/message/BloomFilterMessage.cpp include/fpdb/executor/message/BloomFilterMessage.h
         src/message/BitmapMessage.cpp include/fpdb/executor/message/BitmapMessage.h
@@ -30,10 +29,8 @@ add_library(fpdb-executor STATIC
         src/message/cache/LoadResponseMessage.cpp include/fpdb/executor/message/cache/LoadResponseMessage.h
         src/message/cache/StoreRequestMessage.cpp include/fpdb/executor/message/cache/StoreRequestMessage.h
         src/message/cache/WeightRequestMessage.cpp include/fpdb/executor/message/cache/WeightRequestMessage.h
-#        cache related
+#        base physical operators, operator actors, segment cache actors and required sources
         src/cache/SegmentCacheActor.cpp include/fpdb/executor/cache/SegmentCacheActor.h
-        src/cache/TableCache.cpp include/fpdb/executor/cache/TableCache.h
-#        base physical operators, operator actors, and required sources
         include/fpdb/executor/physical/Forward.h
         include/fpdb/executor/physical/POpRelationshipType.h
         src/physical/POpConnection.cpp include/fpdb/executor/physical/POpConnection.h
@@ -49,6 +46,7 @@ add_library(fpdb-executor STATIC
 #        table communication across the compute cluster using flight
         src/flight/FlightHandler.cpp include/fpdb/executor/flight/FlightHandler.h
         src/flight/FlightClients.cpp include/fpdb/executor/flight/FlightClients.h
+        src/flight/TableCache.cpp include/fpdb/executor/flight/TableCache.h
 #        physical operators
         include/fpdb/executor/physical/Globals.h
         src/physical/sort/SortPOp.cpp include/fpdb/executor/physical/sort/SortPOp.h
@@ -136,10 +134,6 @@ add_library(fpdb-executor STATIC
         src/physical/transform/PrePToFPDBStorePTransformer.cpp include/fpdb/executor/physical/transform/PrePToFPDBStorePTransformer.h
         src/physical/transform/PrePToPTransformerUtil.cpp include/fpdb/executor/physical/transform/PrePToPTransformerUtil.h
         src/physical/transform/StoreTransformTraits.cpp include/fpdb/executor/physical/transform/StoreTransformTraits.h
-        src/physical/transform/pred-trans/PrePToPTransformerForPredTrans.cpp include/fpdb/executor/physical/transform/pred-trans/PrePToPTransformerForPredTrans.h
-        src/physical/transform/pred-trans/PredTransOrder.cpp include/fpdb/executor/physical/transform/pred-trans/PredTransOrder.h
-        src/physical/transform/pred-trans/SmallToLargePredTransOrder.cpp include/fpdb/executor/physical/transform/pred-trans/SmallToLargePredTransOrder.h
-        src/physical/transform/pred-trans/BFSPredTransOrder.cpp include/fpdb/executor/physical/transform/pred-trans/BFSPredTransOrder.h
 #        CAF serialization
         include/fpdb/executor/caf-serialization/CAFMessageSerializer.h
         include/fpdb/executor/caf-serialization/CAFPOpSerializer.h
@@ -160,7 +154,6 @@ add_library(fpdb-executor STATIC
         src/metrics/DebugMetrics.cpp include/fpdb/executor/metrics/DebugMetrics.h
         src/metrics/TransferMetrics.cpp include/fpdb/executor/metrics/TransferMetrics.h
         src/metrics/DiskMetrics.cpp include/fpdb/executor/metrics/DiskMetrics.h
-        src/metrics/PredTransMetrics.cpp include/fpdb/executor/metrics/PredTransMetrics.h
 #        executor
         src/Globals.cpp include/fpdb/executor/Globals.h
         src/Executor.cpp include/fpdb/executor/Executor.h

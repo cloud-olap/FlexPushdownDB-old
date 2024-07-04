@@ -2,7 +2,6 @@
 // Created by matt on 6/5/20.
 //
 
-#include <optional>
 #include <fpdb/executor/physical/filter/FilterPOp.h>
 #include <fpdb/executor/physical/fpdb-store/FPDBStoreSuperPOp.h>
 #include <fpdb/executor/physical/Globals.h>
@@ -13,7 +12,8 @@
 #include <fpdb/executor/flight/FlightClients.h>
 #include <fpdb/store/server/flight/PutBitmapCmd.hpp>
 #include <fpdb/store/server/flight/GetBitmapTicket.hpp>
-#include <fpdb/expression/gandiva/BinaryExpression.h>
+#include <fpdb/expression/gandiva/And.h>
+#include <fpdb/expression/gandiva/Or.h>
 #include <fpdb/tuple/Globals.h>
 #include <fpdb/tuple/serialization/ArrowSerializer.h>
 #include <fpdb/tuple/util/Util.h>
@@ -489,9 +489,20 @@ void FilterPOp::sendEmpty() {
 }
 
 int getPredicateNum(const std::shared_ptr<Expression> &expr) {
-  if (expr->getType() == AND || expr->getType() == OR) {
-    auto biExpr = std::static_pointer_cast<BinaryExpression>(expr);
-    return getPredicateNum(biExpr->getLeft()) + getPredicateNum(biExpr->getRight());
+  if (expr->getType() == AND) {
+    auto andExpr = std::static_pointer_cast<And>(expr);
+    int cnt = 0;
+    for (const auto &subExpr: andExpr->getExprs()) {
+      cnt += getPredicateNum(subExpr);
+    }
+    return cnt;
+  } else if (expr->getType() == OR) {
+    auto orExpr = std::static_pointer_cast<Or>(expr);
+    int cnt = 0;
+    for (const auto &subExpr: orExpr->getExprs()) {
+      cnt += getPredicateNum(subExpr);
+    }
+    return cnt;
   } else {
     return 1;
   }

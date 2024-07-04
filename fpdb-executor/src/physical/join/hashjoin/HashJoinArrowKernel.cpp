@@ -132,9 +132,6 @@ tl::expected<void, std::string> HashJoinArrowKernel::makeOutputSchema() {
     return {};
   }
 
-  // get input column rename for semi-join
-  getSemiJoinInputRename();
-
   // join keys
   std::vector<arrow::FieldRef> buildJoinKeys, probeJoinKeys;
   for (const auto &leftColumn: pred_.getLeftColumnNames()) {
@@ -173,6 +170,7 @@ tl::expected<void, std::string> HashJoinArrowKernel::makeOutputSchema() {
       arrowJoinType = arrow::compute::JoinType::RIGHT_OUTER;
       break;
     }
+    // arrow's impl builds hash table using the right input while we do on the left, so we need to reverse
     case JoinType::RIGHT: {
       arrowJoinType = arrow::compute::JoinType::LEFT_OUTER;
       break;
@@ -181,16 +179,13 @@ tl::expected<void, std::string> HashJoinArrowKernel::makeOutputSchema() {
       arrowJoinType = arrow::compute::JoinType::FULL_OUTER;
       break;
     }
-    case JoinType::LEFT_SEMI: {
+    // calcite only emits left-semi join, corresponding to arrow's right-semi
+    case JoinType::SEMI: {
       arrowJoinType = arrow::compute::JoinType::RIGHT_SEMI;
       break;
     }
-    case JoinType::RIGHT_SEMI: {
-      arrowJoinType = arrow::compute::JoinType::LEFT_SEMI;
-      break;
-    }
     default: {
-      return tl::make_unexpected(fmt::format("Unknown join type: {}", joinType_));
+      return tl::make_unexpected("Unknown join type");
     }
   }
   hashJoinNodeOptions_ = arrow::compute::HashJoinNodeOptions{
@@ -213,7 +208,7 @@ tl::expected<void, std::string> HashJoinArrowKernel::makeArrowExecPlan() {
   if (!outputSchema_.has_value()) {
     return {};
   }
-  if (joinType_ == JoinType::INNER || joinType_ == JoinType::LEFT_SEMI || joinType_ == JoinType::RIGHT_SEMI) {
+  if (joinType_ == JoinType::INNER || joinType_ == JoinType::SEMI) {
     // for inner or semi join, do not make arrow exec plan until both sides have input
     if (!buildInputBuffer_.has_value() || !probeInputBuffer_.has_value()) {
       return {};
@@ -304,21 +299,11 @@ tl::expected<void, std::string> HashJoinArrowKernel::makeArrowExecPlan() {
 
 tl::expected<void, std::string>
 HashJoinArrowKernel::consumeInput(const std::shared_ptr<TupleSet> &tupleSet, bool isBuildSide) {
-  // rename input columns if needed
-  auto renamedTupleSet = tupleSet;
-  if (semiJoinInputRename_.needRename_ && semiJoinInputRename_.renameBuild_ == isBuildSide) {
-    auto expRenamedTupleSet = tupleSet->renameColumnsWithNewTupleSet(semiJoinInputRename_.renames_);
-    if (!expRenamedTupleSet.has_value()) {
-      return tl::make_unexpected(expRenamedTupleSet.error());
-    }
-    renamedTupleSet = *expRenamedTupleSet;
-  }
-
   // get corresponding input node
   auto& inputNode = isBuildSide ? arrowExecPlanSuite_->buildInputNode_ : arrowExecPlanSuite_->probeInputNode_;
 
   // read tupleSet into batches
-  auto reader = std::make_shared<arrow::TableBatchReader>(*renamedTupleSet->table());
+  auto reader = std::make_shared<arrow::TableBatchReader>(*tupleSet->table());
   reader->set_chunksize(DefaultChunkSize);
   auto recordBatchReadResult = reader->Next();
   if (!recordBatchReadResult.ok()) {
@@ -357,7 +342,7 @@ tl::expected<void, std::string> HashJoinArrowKernel::doFinalizeInput(bool isBuil
   // arrow's impl cannot handle the case of no input (crash), we have to check and put an empty batch into it
   if (numInputBatches == 0) {
     auto& inputSchema = isBuildSide ? *buildInputSchema_ : *probeInputSchema_;
-    auto expEmptyRecordBatch = tuple::util::Util::makeEmptyRecordBatch(inputSchema);
+    auto expEmptyRecordBatch = util::Util::makeEmptyRecordBatch(inputSchema);
     if (!expEmptyRecordBatch.has_value()) {
       return tl::make_unexpected(expEmptyRecordBatch.error());
     }
@@ -388,79 +373,6 @@ tl::expected<void, std::string> HashJoinArrowKernel::bufferOutput(const std::sha
     return {};
   } else {
     return (*outputBuffer_)->append(tupleSet);
-  }
-}
-
-void HashJoinArrowKernel::getSemiJoinInputRename() {
-  // only do for semi-join
-  if (joinType_ != JoinType::LEFT_SEMI && joinType_ != JoinType::RIGHT_SEMI) {
-    return;
-  }
-  std::shared_ptr<arrow::Schema> toRefer, toRename;
-  if (joinType_ == JoinType::LEFT_SEMI) {
-    toRefer = *buildInputSchema_;
-    toRename = *probeInputSchema_;
-    semiJoinInputRename_.renameBuild_ = false;
-  } else {
-    toRefer = *probeInputSchema_;
-    toRename = *buildInputSchema_;
-    semiJoinInputRename_.renameBuild_ = true;
-  }
-
-  // check if rename is required and get rename
-  auto toReferColumns = toRefer->field_names();
-  std::unordered_set<std::string> toReferColumnSet(toReferColumns.begin(), toReferColumns.end());
-  std::unordered_map<std::string, std::string> renameMap;
-  for (const auto &toRenameColumn: toRename->field_names()) {
-    bool renameThis = false;
-    std::string newName = toRenameColumn;
-    // keep trying in case after one rename we still get conflicts
-    while (toReferColumnSet.find(newName) != toReferColumnSet.end()) {
-      newName = SemiJoinInputRenamePrefix.data() + newName;
-      renameThis = true;
-    }
-    semiJoinInputRename_.renames_.emplace_back(newName);
-    if (renameThis) {
-      renameMap[toRenameColumn] = newName;
-      semiJoinInputRename_.needRename_ = true;
-    }
-  }
-
-  // rename input schema and join predicate
-  if (semiJoinInputRename_.needRename_) {
-    // rename fields in input schema
-    auto &toRenameSchema = semiJoinInputRename_.renameBuild_ ? *buildInputSchema_ : *probeInputSchema_;
-    arrow::FieldVector renamedFields;
-    for (const auto &toRenameField: toRenameSchema->fields()) {
-      auto renameMapIt = renameMap.find(toRenameField->name());
-      if (renameMapIt != renameMap.end()) {
-        renamedFields.emplace_back(toRenameField->WithName(renameMapIt->second));
-      } else {
-        renamedFields.emplace_back(toRenameField);
-      }
-    }
-    toRenameSchema = arrow::schema(renamedFields);
-
-    // rename join columns
-    auto toRenameJoinColumns = semiJoinInputRename_.renameBuild_ ?
-            pred_.getLeftColumnNames() : pred_.getRightColumnNames();
-    std::vector<std::string> joinColumnRename;
-    for (const auto &toRenameJoinColumn: toRenameJoinColumns) {
-      auto renameMapIt = renameMap.find(toRenameJoinColumn);
-      if (renameMapIt != renameMap.end()) {
-        joinColumnRename.emplace_back(renameMapIt->second);
-      } else {
-        joinColumnRename.emplace_back(toRenameJoinColumn);
-      }
-    }
-    if (semiJoinInputRename_.renameBuild_) {
-      pred_.setLeftColumnNames(joinColumnRename);
-    } else {
-      pred_.setRightColumnNames(joinColumnRename);
-    }
-  } else {
-    semiJoinInputRename_.renameBuild_ = false;
-    semiJoinInputRename_.renames_.clear();
   }
 }
 

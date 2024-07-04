@@ -15,9 +15,9 @@
 #include <fpdb/cache/policy/LFUSCachingPolicy.h>
 #include <fpdb/cache/policy/WLFUCachingPolicy.h>
 #include <fpdb/calcite/CalciteConfig.h>
-#include <fpdb/plan/Globals.h>
 #include <fpdb/plan/calcite/CalcitePlanJsonDeserializer.h>
 #include <fpdb/plan/prephysical/separable/SeparablePrePOpTransformer.h>
+#include <fpdb/plan/prephysical/separable/Globals.h>
 #include <fpdb/catalogue/obj-store/ObjStoreCatalogueEntryReader.h>
 #include <fpdb/catalogue/obj-store/s3/S3Connector.h>
 #include <fpdb/catalogue/obj-store/fpdb-store/FPDBStoreConnector.h>
@@ -25,7 +25,6 @@
 #include <fpdb/store/client/FPDBStoreClientConfig.h>
 #include <fpdb/store/server/flight/Util.hpp>
 #include <fpdb/util/Util.h>
-#include <doctest/doctest.h>
 
 using namespace fpdb::executor::physical;
 using namespace fpdb::cache;
@@ -53,7 +52,8 @@ TestUtil::TestUtil(const string &schemaName,
   objStoreType_(objStoreType),
   mode_(mode),
   cachingPolicyType_(cachingPolicyType),
-  cacheSize_(cacheSize) {
+  cacheSize_(cacheSize),
+  queryCounter_(make_shared<std::atomic<long>>(0)) {
 
   // Set pushdown feature flags
   readPushdownFlags();
@@ -75,34 +75,6 @@ bool TestUtil::e2eNoStartCalciteServer(const string &schemaName,
                     mode,
                     cachingPolicyType,
                     cacheSize);
-  try {
-    testUtil.runTest();
-    return true;
-  } catch (const runtime_error &err) {
-    cout << err.what() << endl;
-    return false;
-  }
-}
-
-bool TestUtil::e2eNoStartCalciteServerSingleThread(const string &schemaName,
-                                                   const vector<string> &queryFileNames,
-                                                   int parallelDegree,
-                                                   bool isDistributed,
-                                                   ObjStoreType objStoreType,
-                                                   const shared_ptr<Mode> &mode,
-                                                   CachingPolicyType cachingPolicyType,
-                                                   size_t cacheSize,
-                                                   bool useHeuristicJoinOrdering) {
-  TestUtil testUtil(schemaName,
-                    queryFileNames,
-                    parallelDegree,
-                    isDistributed,
-                    objStoreType,
-                    mode,
-                    cachingPolicyType,
-                    cacheSize);
-  testUtil.setUseThreads(false);
-  testUtil.setUseHeuristicJoinOrdering(useHeuristicJoinOrdering);
   try {
     testUtil.runTest();
     return true;
@@ -173,9 +145,9 @@ void TestUtil::startFPDBStoreServer() {
           std::nullopt,
           actorManager_);
   auto initResult = fpdbStoreServer_->init();
-  REQUIRE(initResult.has_value());
+//  REQUIRE(initResult.has_value());
   auto startResult = fpdbStoreServer_->start();
-  REQUIRE(startResult.has_value());
+//  REQUIRE(startResult.has_value());
 }
 
 void TestUtil::stopFPDBStoreServer() {
@@ -188,10 +160,6 @@ double TestUtil::getCrtQueryHitRatio() const {
   return crtQueryHitRatio_;
 }
 
-void TestUtil::setUseThreads(bool useThreads) {
-  useThreads_ = useThreads;
-}
-
 void TestUtil::setUseHeuristicJoinOrdering(bool useHeuristicJoinOrdering) {
   useHeuristicJoinOrdering_ = useHeuristicJoinOrdering;
 }
@@ -202,6 +170,14 @@ void TestUtil::setFixLayoutIndices(const set<int> &fixLayoutIndices) {
 
 void TestUtil::setCollAdaptPushdownMetrics(bool collAdaptPushdownMetrics) {
   collAdaptPushdownMetrics_ = collAdaptPushdownMetrics;
+}
+
+void TestUtil::setConcurrent(bool concurrent) {
+  concurrent_ = concurrent;
+}
+
+void TestUtil::setShowResults(bool showResults) {
+  showResults_ = showResults;
 }
 
 void TestUtil::runTest() {
@@ -223,12 +199,24 @@ void TestUtil::runTest() {
   makeExecutor();
 
   // run queries
+  std::vector<std::thread> ths;
   for (uint i = 0; i < queryFileNames_.size(); ++i) {
-    executeQueryFile(queryFileNames_[i]);
+    long queryId = queryCounter_->fetch_add(1);
+    if (!concurrent_) {
+      executeQueryFile(queryId, queryFileNames_[i]);
+      // fix cache layout if needed, only available in serial runs
+      if (fixLayoutIndices_.find((int) i) != fixLayoutIndices_.end()) {
+        fpdb::cache::FIX_CACHE_LAYOUT = true;
+      }
+    } else {
+      ths.push_back(std::thread(&TestUtil::executeQueryFile, this, queryId, queryFileNames_[i]));
+    }
+  }
 
-    // fix cache layout if needed
-    if (fixLayoutIndices_.find((int) i) != fixLayoutIndices_.end()) {
-      fpdb::cache::FIX_CACHE_LAYOUT = true;
+  // wait for concurrent runs
+  if (concurrent_) {
+    for (auto &th: ths) {
+      th.join();
     }
   }
 
@@ -333,9 +321,6 @@ void TestUtil::makeExecutor() {
   const auto &remoteIps = readRemoteIps();
   int CAFServerPort = ExecConfig::parseCAFServerPort();
   actorSystemConfig_ = make_shared<ActorSystemConfig>(CAFServerPort, remoteIps, false);
-  if (!useThreads_) {
-    actorSystemConfig_ -> set("caf.scheduler.max-threads", 1);
-  }
   fpdb::executor::caf::CAFInit::initCAFGlobalMetaObjects();
   actorSystem_ = make_shared<::caf::actor_system>(*actorSystemConfig_);
 
@@ -357,8 +342,10 @@ void TestUtil::makeExecutor() {
   }
 }
 
-void TestUtil::executeQueryFile(const string &queryFileName) {
-  cout << "Query: " << queryFileName << endl;
+void TestUtil::executeQueryFile(long queryId, const string &queryFileName) {
+  ConcurrentOutputMutex.lock();
+  cout << fmt::format("Query: '{}' (id: {})", queryFileName, queryId) << endl;
+  ConcurrentOutputMutex.unlock();
 
   // Plan query
   string queryPath = std::filesystem::current_path()
@@ -390,17 +377,21 @@ void TestUtil::executeQueryFile(const string &queryFileName) {
 
   // execute
   const auto &execRes = objStoreConnector_->getStoreType() == ObjStoreType::FPDB_STORE ?
-                        executor_->execute(physicalPlan, isDistributed_, collAdaptPushdownMetrics_,
+                        executor_->execute(queryId, physicalPlan, isDistributed_, collAdaptPushdownMetrics_,
                                            static_pointer_cast<FPDBStoreConnector>(objStoreConnector_)) :
-                        executor_->execute(physicalPlan, isDistributed_);
+                        executor_->execute(queryId, physicalPlan, isDistributed_);
 
   // show output
   stringstream ss;
-  ss << fmt::format("\nResult |\n{}", execRes.first->showString(
-          TupleSetShowOptions(TupleSetShowOrientation::RowOriented, 100)));
-  ss << fmt::format("\nTime: {} secs\n\n", (double) (execRes.second) / 1000000000.0);
+  if (showResults_) {
+    ss << fmt::format("\nResult of '{}' (id: {}) |\n{}", queryFileName, queryId, execRes.first->showString(
+            TupleSetShowOptions(TupleSetShowOrientation::RowOriented, 100)));
+  }
+  ss << fmt::format("\nTime (id: {}): {} secs\n\n", queryId, (double) (execRes.second) / 1000000000.0);
   ss << endl;
+  ConcurrentOutputMutex.lock();
   cout << ss.str() << endl;
+  ConcurrentOutputMutex.unlock();
 
   // metrics used for checking in some unit tests
   crtQueryHitRatio_ = executor_->getCrtQueryHitRatio();

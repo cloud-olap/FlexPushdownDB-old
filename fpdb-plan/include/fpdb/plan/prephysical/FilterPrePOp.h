@@ -12,7 +12,7 @@ namespace fpdb::plan::prephysical {
 
 class FilterPrePOp: public PrePhysicalOp {
 public:
-  FilterPrePOp(uint id, double rowCount, const shared_ptr<fpdb::expression::gandiva::Expression> &predicate);
+  FilterPrePOp(uint id, const shared_ptr<fpdb::expression::gandiva::Expression> &predicate);
 
   string getTypeString() override;
 

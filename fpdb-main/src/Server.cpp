@@ -27,38 +27,10 @@ void Server::start() {
 
   // start the daemon flight server if needed
   if (fpdb::executor::physical::USE_FLIGHT_COMM) {
-    // local ip
-    auto expLocalIp = getLocalIp();
-    if (!expLocalIp.has_value()) {
-      throw std::runtime_error(expLocalIp.error());
-    }
-
-    // make flight server
-    ::arrow::flight::Location location;
-    auto st = ::arrow::flight::Location::ForGrpcTcp("0.0.0.0", ExecConfig::parseFlightPort(), &location);
-    if (!st.ok()) {
-      throw std::runtime_error("Cannot open flight server: " + st.message());
-    }
-    fpdb::executor::flight::FlightHandler::daemonServer_ = std::make_unique<fpdb::executor::flight::FlightHandler>(
-            location, *expLocalIp);
-
-    // init
-    auto res = fpdb::executor::flight::FlightHandler::daemonServer_->init();
+    auto res = executor::flight::FlightHandler::startDaemonFlightServer(ExecConfig::parseFlightPort(), flight_future_);
     if (!res.has_value()) {
-      throw std::runtime_error("Cannot open flight server: " + res.error());
+      throw std::runtime_error(res.error());
     }
-
-    // start
-    flight_future_ = std::async(std::launch::async, [=]() {
-      return fpdb::executor::flight::FlightHandler::daemonServer_->serve();
-    });
-    // Bit of a hack to check if the flight server failed on "serve"
-    if (flight_future_.wait_for(100ms) == std::future_status::ready) {
-      throw std::runtime_error("Cannot open flight server: " + flight_future_.get().error());
-    }
-    std::cout << "Daemon flight server started at port: "
-              << fpdb::executor::flight::FlightHandler::daemonServer_->port()
-              << std::endl;
   }
 
   // read remote Ips and server port
@@ -94,11 +66,7 @@ void Server::stop() {
 
   // stop the daemon flight server if needed
   if (fpdb::executor::physical::USE_FLIGHT_COMM) {
-    fpdb::executor::flight::FlightHandler::daemonServer_->shutdown();
-    fpdb::executor::flight::FlightHandler::daemonServer_->wait();
-    flight_future_.wait();
-    fpdb::executor::flight::FlightHandler::daemonServer_.reset();
-    std::cout << "Daemon flight server stopped" << std::endl;
+    executor::flight::FlightHandler::stopDaemonFlightServer(flight_future_);
   }
 
   // close the actor system

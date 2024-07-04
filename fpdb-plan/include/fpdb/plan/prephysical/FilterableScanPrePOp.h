@@ -15,7 +15,7 @@ namespace fpdb::plan::prephysical {
 
 class FilterableScanPrePOp: public PrePhysicalOp {
 public:
-  FilterableScanPrePOp(uint id, double rowCount, const shared_ptr<Table> &table);
+  FilterableScanPrePOp(uint id, const shared_ptr<Table> &table);
 
   string getTypeString() override;
   set<string> getUsedColumnNames() override;
@@ -23,6 +23,7 @@ public:
 
   const shared_ptr<fpdb::expression::gandiva::Expression> &getPredicate() const;
   const shared_ptr<Table> &getTable() const;
+
   void setPredicate(const shared_ptr<fpdb::expression::gandiva::Expression> &predicate);
 
 private:

@@ -14,7 +14,6 @@ namespace fpdb::plan::prephysical {
 class GroupPrePOp: public PrePhysicalOp {
 public:
   GroupPrePOp(uint id,
-              double rowCount,
               const vector<string> &groupColumnNames,
               const vector<string> &aggOutputColumnNames,
               const vector<shared_ptr<AggregatePrePFunction>> &functions);

@@ -5,7 +5,6 @@
 #ifndef FPDB_FPDB_PLAN_INCLUDE_FPDB_PLAN_PREPHYSICAL_SEPARABLEPREPOPTRANSFORMER_H
 #define FPDB_FPDB_PLAN_INCLUDE_FPDB_PLAN_PREPHYSICAL_SEPARABLEPREPOPTRANSFORMER_H
 
-#include <optional>
 #include <fpdb/plan/prephysical/separable/SeparableSuperPrePOp.h>
 #include <fpdb/plan/prephysical/separable/SeparableTraits.h>
 #include <fpdb/plan/prephysical/PrePhysicalPlan.h>

@@ -15,7 +15,6 @@ public:
   constexpr static const char *const DUMMY_COLUMN_PREFIX = "dummy";
 
   ProjectPrePOp(uint id,
-                double rowCount,
                 const vector<shared_ptr<fpdb::expression::gandiva::Expression>> &exprs,
                 const vector<std::string> &exprNames,
                 const vector<pair<string, string>> &projectColumnNamePairs);

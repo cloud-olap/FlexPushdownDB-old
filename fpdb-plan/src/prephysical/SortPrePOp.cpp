@@ -9,8 +9,8 @@ using namespace std;
 
 namespace fpdb::plan::prephysical {
 
-SortPrePOp::SortPrePOp(uint id, double rowCount, const vector<SortKey> &sortKeys) :
-  PrePhysicalOp(id, SORT, rowCount),
+SortPrePOp::SortPrePOp(uint id, const vector<SortKey> &sortKeys) :
+  PrePhysicalOp(id, SORT),
   sortKeys_(sortKeys) {}
 
 string SortPrePOp::getTypeString() {

@@ -9,11 +9,10 @@ using namespace fpdb::plan;
 
 namespace fpdb::plan::prephysical {
 ProjectPrePOp::ProjectPrePOp(uint id,
-                             double rowCount,
                              const vector<shared_ptr<fpdb::expression::gandiva::Expression>> &exprs,
                              const vector<std::string> &exprNames,
                              const vector<pair<string, string>> &projectColumnNamePairs) :
-  PrePhysicalOp(id, PROJECT, rowCount),
+  PrePhysicalOp(id, PROJECT),
   exprs_(exprs),
   exprNames_(exprNames),
   projectColumnNamePairs_(projectColumnNamePairs) {}

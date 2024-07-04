@@ -5,7 +5,6 @@
 #ifndef FPDB_FPDB_EXECUTOR_INCLUDE_FPDB_EXECUTOR_PHYSICAL_GLOBALS_H
 #define FPDB_FPDB_EXECUTOR_INCLUDE_FPDB_EXECUTOR_PHYSICAL_GLOBALS_H
 
-#include <fpdb/executor/physical/transform/pred-trans/PredTransOrder.h>
 #include <stdint.h>
 #include <string>
 
@@ -66,12 +65,6 @@ inline bool ENABLE_FILTER_BITMAP_PUSHDOWN;
 inline bool ENABLE_ADAPTIVE_PUSHDOWN = false;     // we need to send flight request to storage side to enable this
 static constexpr std::string_view PullupOpNamePrefix = "RemoteFileScan";
 static constexpr std::string_view PushdownOpNamePrefix = "FPDBStoreSuper";
-
-/**
- * For predicate transfer
- */
-inline PredTransOrderType PRED_TRANS_ORDER_TYPE = PredTransOrderType::SMALL_TO_LARGE;
-inline bool ENABLE_YANNAKAKIS = false;      // only used by BFSPredTransOrder
 
 }
 

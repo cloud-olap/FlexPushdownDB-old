@@ -2,14 +2,17 @@
 // Created by matt on 4/2/22.
 //
 
-#include <optional>
 #include "fpdb/store/server/flight/CmdObject.hpp"
 #include "fpdb/store/server/flight/SelectObjectContentCmd.hpp"
 #include "fpdb/store/server/flight/PutBitmapCmd.hpp"
 #include "fpdb/store/server/flight/ClearBitmapCmd.hpp"
-#include "fpdb/store/server/flight/PutAdaptPushdownMetricsCmd.hpp"
-#include "fpdb/store/server/flight/ClearAdaptPushdownMetricsCmd.hpp"
-#include "fpdb/store/server/flight/SetAdaptPushdownCmd.hpp"
+#include "fpdb/store/server/flight/ClearTableCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/PutAdaptPushdownMetricsCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/ClearAdaptPushdownMetricsCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/SetAdaptPushdownCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/PushbackCompleteCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/PushbackDoubleExecCmd.hpp"
+#include "fpdb/store/server/flight/adaptive/SetNumReqToTailCmd.hpp"
 #include "fpdb/store/server/flight/Util.hpp"
 #include <fmt/format.h>
 
@@ -34,12 +37,20 @@ tl::expected<std::shared_ptr<CmdObject>, std::string> CmdObject::deserialize(con
     return PutBitmapCmd::from_json(document);
   } else if (type == ClearBitmapCmdTypeName.data()) {
     return ClearBitmapCmd::from_json(document);
+  } else if (type == ClearTableCmdTypeName.data()) {
+    return ClearTableCmd::from_json(document);
   } else if (type == PutAdaptPushdownMetricsCmdTypeName.data()) {
     return PutAdaptPushdownMetricsCmd::from_json(document);
   } else if (type == ClearAdaptPushdownMetricsCmdTypeName.data()) {
     return ClearAdaptPushdownMetricsCmd::from_json(document);
   } else if (type == SetAdaptPushdownCmdTypeName.data()) {
     return SetAdaptPushdownCmd::from_json(document);
+  } else if (type == PushbackCompleteCmdTypeName.data()) {
+    return PushbackCompleteCmd::from_json(document);
+  } else if (type == PushbackDoubleExecCmdTypeName.data()) {
+    return PushbackDoubleExecCmd::from_json(document);
+  } else if (type == SetNumReqToTailCmdTypeName.data()) {
+    return SetNumReqToTailCmd::from_json(document);
   } else {
     return tl::make_unexpected(fmt::format("Unsupported cmd object type: '{}'", type));
   }

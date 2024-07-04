@@ -5,7 +5,6 @@
 #ifndef FPDB_FPDB_EXPRESSION_GANDIVA_INCLUDE_FPDB_EXPRESSION_GANDIVA_CAFSERIALIZATION_CAFEXPRESSIONSERIALIZER_H
 #define FPDB_FPDB_EXPRESSION_GANDIVA_INCLUDE_FPDB_EXPRESSION_GANDIVA_CAFSERIALIZATION_CAFEXPRESSIONSERIALIZER_H
 
-#include <optional>
 #include <fpdb/expression/gandiva/Add.h>
 #include <fpdb/expression/gandiva/And.h>
 #include <fpdb/expression/gandiva/Cast.h>

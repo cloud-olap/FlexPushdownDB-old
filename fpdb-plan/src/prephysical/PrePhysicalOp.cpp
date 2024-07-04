@@ -6,10 +6,9 @@
 
 namespace fpdb::plan::prephysical {
 
-PrePhysicalOp::PrePhysicalOp(uint id, PrePOpType type, double rowCount) :
+PrePhysicalOp::PrePhysicalOp(uint id, PrePOpType type) :
   id_(id),
-  type_(type),
-  rowCount_(rowCount) {}
+  type_(type) {}
 
 uint PrePhysicalOp::getId() const {
   return id_;
@@ -27,20 +26,12 @@ const set<string> &PrePhysicalOp::getProjectColumnNames() const {
   return projectColumnNames_;
 }
 
-double PrePhysicalOp::getRowCount() const {
-  return rowCount_;
-}
-
 void PrePhysicalOp::setProducers(const vector<shared_ptr<PrePhysicalOp>> &producers) {
   producers_ = producers;
 }
 
 void PrePhysicalOp::setProjectColumnNames(const set<string> &projectColumnNames) {
   projectColumnNames_ = projectColumnNames;
-}
-
-void PrePhysicalOp::setRowCount(double rowCount) {
-  rowCount_ = rowCount;
 }
 
 }

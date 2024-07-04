@@ -18,7 +18,6 @@ inline constexpr int PARALLEL_DIST_SF10 = 17;    // set to 2^n may cause skewnes
 inline constexpr int PARALLEL_DIST_SF100 = 17;
 inline constexpr int PARALLEL_FPDB_STORE_SAME_NODE = 3;
 inline constexpr int PARALLEL_FPDB_STORE_DIFF_NODE = 17;
-inline constexpr int PARALLEL_PRED_TRANS = 1;
 
 }
 

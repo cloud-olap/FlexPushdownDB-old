@@ -2,7 +2,6 @@
 // Created by Yifei Yang on 4/17/22.
 //
 
-#include <optional>
 #include "fpdb/store/server/flight/PutBitmapCmd.hpp"
 #include "fpdb/store/server/flight/Util.hpp"
 #include "fmt/format.h"

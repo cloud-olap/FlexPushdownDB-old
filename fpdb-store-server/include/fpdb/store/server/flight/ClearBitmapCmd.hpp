@@ -20,7 +20,6 @@ public:
   BitmapType bitmap_type() const;
   long query_id() const;
   const std::string& op() const;
-  bool is_compute_side() const;
 
   tl::expected<std::string, std::string> serialize(bool pretty) override;
   static tl::expected<std::shared_ptr<ClearBitmapCmd>, std::string> from_json(const nlohmann::json& jObj);

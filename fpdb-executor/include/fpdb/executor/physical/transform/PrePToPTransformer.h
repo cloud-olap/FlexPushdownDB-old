@@ -6,7 +6,6 @@
 #define FPDB_FPDB_EXECUTOR_INCLUDE_FPDB_EXECUTOR_PHYSICAL_TRANSFORM_PREPTOPTRANSFORMER_H
 
 #include <fpdb/executor/physical/PhysicalPlan.h>
-#include <fpdb/executor/metrics/Globals.h>
 #include <fpdb/plan/prephysical/PrePhysicalPlan.h>
 #include <fpdb/plan/prephysical/SortPrePOp.h>
 #include <fpdb/plan/prephysical/LimitSortPrePOp.h>
@@ -30,11 +29,6 @@ using namespace fpdb::catalogue::obj_store;
 
 namespace fpdb::executor::physical {
 
-enum PrePToPTransformerType {
-  REGULAR,
-  PRED_TRANS
-};
-
 class PrePToPTransformer {
 
 public:
@@ -45,7 +39,7 @@ public:
                                             int parallelDegree,
                                             int numNodes);
 
-protected:
+private:
   PrePToPTransformer(const shared_ptr<PrePhysicalPlan> &prePhysicalPlan,
                      const shared_ptr<CatalogueEntry> &catalogueEntry,
                      const shared_ptr<ObjStoreConnector> &objStoreConnector,
@@ -57,14 +51,14 @@ protected:
    * Impl of transformation
    * @return
    */
-  virtual shared_ptr<PhysicalPlan> transform();
+  shared_ptr<PhysicalPlan> transform();
 
   /**
    * Transform prephysical op to physical op in dfs style
    * @param prePOp: prephysical op
    * @return physical ops to be connect to its consumers
    */
-  virtual vector<shared_ptr<PhysicalOp>> transformDfs(const shared_ptr<PrePhysicalOp> &prePOp);
+  vector<shared_ptr<PhysicalOp>> transformDfs(const shared_ptr<PrePhysicalOp> &prePOp);
 
   vector<vector<shared_ptr<PhysicalOp>>> transformProducers(const shared_ptr<PrePhysicalOp> &prePOp);
 
@@ -112,9 +106,6 @@ protected:
                         vector<shared_ptr<PhysicalOp>> &allPOps,
                         bool* isHashJoinArrowLeftConn = nullptr);
 
-  void clear();
-
-  PrePToPTransformerType type_ = PrePToPTransformerType::REGULAR;
   shared_ptr<PrePhysicalPlan> prePhysicalPlan_;
   shared_ptr<CatalogueEntry> catalogueEntry_;
   shared_ptr<ObjStoreConnector> objStoreConnector_;
@@ -122,13 +113,7 @@ protected:
   int parallelDegree_;
   int numNodes_;
 
-  // state maintained during transformation
   unordered_map<string, shared_ptr<PhysicalOp>> physicalOps_;
-
-#if SHOW_DEBUG_METRICS == true
-  // save transform results for some prephysical ops, used in predicate transfer metrics
-  unordered_map<uint, vector<shared_ptr<PhysicalOp>>> prePOpIdToConnOpsForPredTrans_;
-#endif
 };
 
 }

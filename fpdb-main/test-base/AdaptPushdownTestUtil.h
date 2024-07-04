@@ -9,6 +9,7 @@
 #include <fpdb/store/server/flight/CmdObject.hpp>
 #include <fpdb/store/client/FPDBStoreClientConfig.h>
 #include <unordered_map>
+#include <vector>
 #include <string>
 
 namespace fpdb::main::test {
@@ -16,11 +17,13 @@ namespace fpdb::main::test {
 class AdaptPushdownTestUtil {
 
 public:
+  // multiple queries mean concurrent runs during adaptive pushdown
   static void run_adapt_pushdown_benchmark_query(const std::string &schemaName,
-                                                 const std::string &queryFileName,
+                                                 const std::vector<std::string> &queryFileNames,
                                                  const std::vector<int> &maxThreadsVec,
                                                  int parallelDegree,
-                                                 bool startFPDBStore);
+                                                 bool startFPDBStore,
+                                                 bool useHeuristicJoinOrdering = true);
 
 private:
   static void set_pushdown_flags(bool enableAdaptPushdown, int maxThreads,
